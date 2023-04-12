@@ -31,7 +31,7 @@ target_compile_options(${PROJECT_NAME} PUBLIC $<$<CONFIG:RELWITHDEBINFO>: ${COMP
 target_compile_options(${PROJECT_NAME} PUBLIC $<$<CONFIG:MINSIZEREL>: ${COMPILE_OPTIONS_MIN}>)
 
 target_include_directories(${PROJECT_NAME} PUBLIC drivers/include)
-target_link_libraries(${PROJECT_NAME} IotLibrary -Wl,-Map=${PROJECT_NAME}.map -Wl,--start-group -Wl,-lm -Wl,-lIotLibrary -Wl,--end-group -Wl,-L/workspaces/iot-demo/target/drivers/lib -Wl,--gc-sections -mrelax -mmcu=atmega2560)
+target_link_libraries(${PROJECT_NAME} IotLibrary -Wl,-Map=${PROJECT_NAME}.map -Wl,--start-group -Wl,-lm -Wl,-lIotLibrary -Wl,--end-group -Wl,-L/workspaces/iot-base/target/drivers/lib -Wl,--gc-sections -mrelax -mmcu=atmega2560)
 
 add_subdirectory(src)
 add_subdirectory(free-rtos)

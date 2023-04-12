@@ -10,7 +10,7 @@ on:
 jobs:
 
   call_chk_devcontainer:
-    name: Checking for valid dev container image
+    name: Check valid devcontainer image
     permissions:
       contents: read
       packages: write
@@ -20,7 +20,8 @@ jobs:
     secrets:
       secr-token: ${{ secrets.GITHUB_TOKEN }}
 
-  run_tests:
+  build_all_run_tests:
+    name: Check all builds and tests
     runs-on: ubuntu-latest
     needs: call_chk_devcontainer
     permissions:
