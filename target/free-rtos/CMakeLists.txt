@@ -1,0 +1,33 @@
+target_sources(${PROJECT_NAME}
+    PUBLIC
+    src/ATMEGA_FreeRTOS.h
+    src/FreeRTOSConfig.h
+    src/FreeRTOSVariant.h
+    src/atomic.h
+    src/croutine.c
+    src/croutine.h
+    src/event_groups.c
+    src/event_groups.h
+    src/heap_4.c
+    src/list.c
+    src/list.h
+    src/message_buffer.h
+    src/mpu_wrappers.h
+    src/port.c
+    src/portable.h
+    src/portmacro.h
+    src/projdefs.h
+    src/queue.c
+    src/queue.h
+    src/semphr.h
+    src/stack_macros.h
+    src/stream_buffer.c
+    src/stream_buffer.h
+    src/task.h
+    src/tasks.c
+    src/timers.c
+    src/timers.h
+    src/variantHooks.c
+)
+
+target_include_directories(${PROJECT_NAME} PUBLIC src)

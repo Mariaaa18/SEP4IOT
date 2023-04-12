@@ -1,0 +1,6 @@
+{    
+    "cmake.configureSettings" : {
+        "CMAKE_VERBOSE_MAKEFILE" : "ON",
+        "CMAKE_BUILD_TYPE" : "Release"
+    }
+}

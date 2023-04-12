@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"name": "Project root",
+			"path": ".."
+		},
+		{
+			"name" : "Target",
+			"path": "../target"
+		},
+		{
+			"name": "Test",
+			"path": "../test"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"test/": true,
+			"target/": true
+	}
+}

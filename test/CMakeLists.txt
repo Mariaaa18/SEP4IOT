@@ -1,0 +1,36 @@
+cmake_minimum_required(VERSION 3.14)
+project(iot_demo_test)
+
+# GoogleTest requires at least C++14
+set(CMAKE_CXX_STANDARD 14)
+
+set(CMAKE_VERBOSE_MAKEFILE TRUE)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+enable_testing()
+
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/releases/tag/release-1.12.1
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+include(GoogleTest)
+
+add_executable(
+  ${PROJECT_NAME}
+  ""
+)
+
+include_directories(include)
+
+add_subdirectory(src)
+
+target_link_libraries(
+  ${PROJECT_NAME}
+  GTest::gtest_main
+)
+
+gtest_discover_tests(  ${PROJECT_NAME})
