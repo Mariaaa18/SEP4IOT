@@ -1,7 +1,7 @@
 # A workflow for checking for the presence of an up-to-date image
 # for the dev container. If the image does not exists or is outdated
 # it will be rebuilt and pushed to ghcr.io.
-name: Check for valid devcontainer image - rebuild if needed
+name: Check/rebuild devcontainer image
 
 on:
    # Called from elsewhere

@@ -1,6 +1,7 @@
 #! /bin/sh
 
 cd test
+rm -rf build
 /usr/bin/cmake -Wno-dev --no-warn-unused-cli -DDOWNLOAD_EXTRACT_TIMESTAMP=TRUE -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc -DCMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++ -S. -Bbuild
 /usr/bin/cmake --build build --config Debug --target all --
 
