@@ -1,0 +1,60 @@
+# A workflow for checking for the presence of an up-to-date image
+# for the dev container. If the image does not exists or is outdated
+# it will be rebuilt and pushed to ghcr.io.
+name: Check for valid devcontainer image - rebuild if needed
+
+on:
+   # Called from elsewhere
+  workflow_call:
+    inputs:
+      image-id:
+        required: true
+        type: string
+    secrets:
+      secr-token:
+        required: true
+    outputs:
+      image-path:
+        description: The image name in all lower-case
+        value: ${{jobs.chk_devcontainer.outputs.image_name_lc}}
+
+# Allow one concurrent deployment
+concurrency:
+   group: 'devcontainer'
+   cancel-in-progress: true
+
+jobs:
+  chk_devcontainer:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image_name_lc: ${{steps.lower_case_names.outputs.image_name_lowercase}}
+
+    steps:
+      - name: List some interesting settings
+        run: |
+          echo "github.actor: " ${{ github.actor }}
+          echo "github.repository: " ${{ github.repository }}
+          echo "github.workspace :" ${{ github.workspace }}
+          echo "github.repository_owner :" ${{ github.repository_owner }}
+          sh -c "echo 'pwd': $(pwd)"
+          sh -c "echo '~'  : $HOME"
+      - name: Downcase image and repo names
+        id: lower_case_names
+        run: |
+          echo "image_name_lowercase=ghcr.io/${GITHUB_REPOSITORY,,}/${{inputs.image-id}}" >>${GITHUB_OUTPUT}
+          echo "repo_name_lowercase=${GITHUB_REPOSITORY,,}" >>${GITHUB_OUTPUT}
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          ref: main
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{github.actor }}
+          password: ${{secrets.secr-token}}
+      - name: Check dev container
+        run: .github/scripts/check_dev_container.sh ${{steps.lower_case_names.outputs.repo_name_lowercase}} ${{steps.lower_case_names.outputs.image_name_lowercase}} ${{secrets.secr-token}}  

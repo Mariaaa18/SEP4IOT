@@ -8,3 +8,4 @@ cd test
 sed 's/\/workspaces\/iot-demo\///g' < temp.xml > test_result.xml
 rm temp.xml
 #ctest --output-junit ../test_result.xml --test-dir build
+exit 0
