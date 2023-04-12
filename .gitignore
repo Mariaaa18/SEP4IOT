@@ -3,3 +3,4 @@
 test/test_result.xml
 target/firmware.zip
 firmware.*
+test_result.xml
