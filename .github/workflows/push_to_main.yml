@@ -31,8 +31,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - name: Checkout repo
-        uses: actions/checkout@v3
       - name: Pull dev container
         run: docker pull ${IMAGE_NAME}
       - name: Run tests inside container
@@ -40,7 +38,7 @@ jobs:
           docker run --rm \
             --mount type=bind,src=${{ github.workspace }},dst=/workspaces \
             --mount type=bind,src=$HOME,dst=/root \
-            ${IMAGE_NAME} sh -c "cd /workspaces;./pipeline/config_build_run_tests.sh"
+            ${IMAGE_NAME} sh -c "cd /workspaces;./pipeline/config_build_run_test.sh"
       - name: Build target firmware inside container
         run: |
           docker run --rm \
