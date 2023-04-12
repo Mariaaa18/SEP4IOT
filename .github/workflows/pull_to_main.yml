@@ -1,9 +1,9 @@
-name: 'Make sure all tests run and that firmware can be built on push'
+name: 'Make sure all tests run & that fw can be built on pull-req'
 run-name: ${{ github.actor }} initiated a push request
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
     branches:
       - main
 
@@ -34,13 +34,14 @@ jobs:
         uses: actions/checkout@v3
       - name: Pull dev container
         run: docker pull ${IMAGE_NAME}
-      - name: Run tests inside container
+      - name: Run tests
         run: |
           docker run --rm \
             --mount type=bind,src=${{ github.workspace }},dst=/workspaces \
             --mount type=bind,src=$HOME,dst=/root \
             ${IMAGE_NAME} sh -c "cd /workspaces;./pipeline/config_build_run_test.sh"
-      - name: Build target firmware inside container
+            
+      - name: Build target firmware
         run: |
           docker run --rm \
             --mount type=bind,src=${{ github.workspace }},dst=/workspaces \
