@@ -53,19 +53,12 @@ jobs:
             --mount type=bind,src=$HOME,dst=/root \
             ${IMAGE_NAME} sh -c "cd /workspaces;./pipeline/build_firmware_files.sh"
       
-      - name: Archive test results
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-coverage-report
-          path: test_result.xml
-          retention-days: 14
-      
-      - name: Archive firmware
-        uses: actions/upload-artifact@v3
-        with:
-          name: firmware-files
-          path: firmware.*
-          retention-days: 14
+      - name: Update download files and timestamps
+        run: |
+          docker run --rm \
+            --mount type=bind,src=${{ github.workspace }},dst=/workspaces \
+            --mount type=bind,src=$HOME,dst=/root \
+            ${IMAGE_NAME} sh -c "cd /workspaces;./pipeline/update_project_pages.sh"
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
