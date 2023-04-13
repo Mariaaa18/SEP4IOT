@@ -24,7 +24,8 @@
 				"yzhang.markdown-all-in-one",
 				"redhat.vscode-yaml",
 				"donjayamanne.githistory",
-				"ms-azuretools.vscode-docker"
+				"ms-azuretools.vscode-docker",
+				"me-dutour-mathieu.vscode-github-actions"
 			]
     	}
   }
