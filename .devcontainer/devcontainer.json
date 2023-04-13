@@ -20,12 +20,13 @@
     	"vscode": {
       		"extensions": [
 				"ms-vscode.cpptools-extension-pack",
-				"gitlab.gitlab-workflow",
 				"yzhang.markdown-all-in-one",
 				"redhat.vscode-yaml",
 				"donjayamanne.githistory",
 				"ms-azuretools.vscode-docker",
-				"me-dutour-mathieu.vscode-github-actions"
+				"me-dutour-mathieu.vscode-github-actions",
+				"ms-vscode.cmake-tools",
+				"donjayamanne.githistory"
 			]
     	}
   }
