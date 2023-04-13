@@ -18,11 +18,11 @@ set(COMPILE_OPTIONS_COM -funsigned-char -funsigned-bitfields -DF_CPU=16000000L -
 # Compile options for RELEASE build
 set(COMPILE_OPTIONS_REL ${COMPILE_OPTIONS_COM} -Os -DNDEBUG)
 # Compile options for DEBUG build
-set(COMPILE_OPTIONS_DBG ${COMPILE_OPTIONS_COM} -g2 -Os -DDEBUG)
+set(COMPILE_OPTIONS_DBG ${COMPILE_OPTIONS_COM} -g -Og -DDEBUG)
 # Compile options for RELEASE W. DEBUG build
-set(COMPILE_OPTIONS_RDB ${COMPILE_OPTIONS_COM} -g2 -Os -DDEBUG)
+set(COMPILE_OPTIONS_RDB ${COMPILE_OPTIONS_COM} -g -Os -DDEBUG)
 # Compile options for RELEASE MINIMAL SIZE 
-set(COMPILE_OPTIONS_MIN ${COMPILE_OPTIONS_COM} -Os -DDEBUG)
+set(COMPILE_OPTIONS_MIN ${COMPILE_OPTIONS_COM} -Oz -DNDEBUG)
 
 # Map compile options according to build configuration
 target_compile_options(${PROJECT_NAME} PUBLIC $<$<CONFIG:RELEASE>: ${COMPILE_OPTIONS_REL}>)
