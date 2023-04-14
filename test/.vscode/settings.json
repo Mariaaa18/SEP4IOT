@@ -1,5 +1,6 @@
 {    
     "cmake.configureSettings" : {
-        "CMAKE_VERBOSE_MAKEFILE" : "ON"
+        "CMAKE_VERBOSE_MAKEFILE" : "ON",
+    "ctest-lab.buildDirectory" : "${workspaceFolder}/test/build"
     }
 }

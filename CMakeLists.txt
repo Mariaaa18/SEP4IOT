@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(iot_demo)
+project(Ignore_This_Project)
 
-set(CMAKE_VERBOSE_MAKEFILE TRUE)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+add_executable(Its_Just_a_Dummy_Project "")
