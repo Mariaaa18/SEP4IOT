@@ -1,0 +1,6 @@
+{
+    "cmake.sourceDirectory": [
+        "${workspaceFolder}/test",
+        "${workspaceFolder}/target",
+    ]
+}

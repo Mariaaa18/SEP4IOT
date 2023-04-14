@@ -1,0 +1,16 @@
+[
+  {
+    "name": "GCC 12.2.0 avr",
+    "compilers": {
+      "C": "/usr/bin/avr-gcc",
+      "CXX": "/usr/bin/avr-g++"
+    }
+  },
+  {
+    "name": "GCC 12.2.1 x86_64-alpine-linux-musl",
+    "compilers": {
+      "C": "/usr/bin/gcc",
+      "CXX": "/usr/bin/g++"
+    }
+  }
+]
