@@ -1,6 +1,8 @@
 {    
     "cmake.configureSettings" : {
         "CMAKE_VERBOSE_MAKEFILE" : "ON",
-        "CMAKE_BUILD_TYPE" : "Release"
+        "CMAKE_BUILD_TYPE" : "Release",
+        "ctest-lab.buildDirectory" : "${sourceDirectory}/build",
+        "cmake.buildDirectory" : "${sourceDirectory}/build"
     }
 }
