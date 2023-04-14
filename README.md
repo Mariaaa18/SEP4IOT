@@ -89,6 +89,12 @@ Cloning your repository to a container volume may seem odd at first. It means th
 
 Just close the project using *File/Close Remote/Connection* when you want to put the project aside. When you want to work on the project again, just use the VSCode *File/Open Recent* menu to re-open the development container (it shows up as something like `/workspaces/iot-base/.vscode/iot-demo (Workspace)[Dev Container:C++]`), and carry on from where you left.
 
+If your project has disappeared from the *File/Open Recent* menu, you can re-open your project like this (provided that you haven't deleted your development container):
+* Start VSCode and click on the Remote Explorer icon.
+* List development containers (make sure the drop-down in the upper right corner shows *Dev Containers*)
+* Find your development container
+* Select one of the workspaces (folders) listed under the container and click on the small folder icon. That will start the development container and make it open the selected workspace.
+
 ## If/when shit happens
 As long as you _**don't unintentionally delete the container volume**_ you can always retrieve any work that hasn't been committed and pushed to GitHub.
 
