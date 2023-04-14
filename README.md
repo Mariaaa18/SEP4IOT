@@ -87,9 +87,9 @@ to install the debugger. The debugger is not part of the default devcontainer im
 ## Starting and stopping work
 Cloning your repository to a container volume may seem odd at first. It means that everything is inside the volume, and you can't browse or fiddle with the files in a local Window repository. But then why would you, you can always (re-) start the development container which automatically mounts the volume. By using VSCode as your sole window into the project we gain some advantages, and you can do all you need with the project inside VSCode anyway.
 
-Just close the project using *File/Close Remote/Connection* when you want to put the project aside. When you want to work on the project again, just use the Remote Explorer to re-open the development container, and carry from where you left.
+Just close the project using *File/Close Remote/Connection* when you want to put the project aside. When you want to work on the project again, just use the VSCode *File/Open Recent* menu to re-open the development container (it shows up as something like `/workspaces/iot-base/.vscode/iot-demo (Workspace)[Dev Container:C++]`), and carry on from where you left.
 
-## If/when shity happens
+## If/when shit happens
 As long as you _**don't unintentionally delete the container volume**_ you can always retrieve any work that hasn't been committed and pushed to GitHub.
 
 You can use Docker Desktop to export the contents of volume as a file in a local Windows folder. That will produce a .tar.zst formatted file that you can extract using the zstd command in a WSL/Linux shell.
