@@ -1,6 +1,3 @@
-//{
-//    "cmake.sourceDirectory": [
-//        "${workspaceFolder}/test",
-//        "${workspaceFolder}/target",
-//    ]
-//}
+{
+    "cmake.configureOnOpen" : false
+}
