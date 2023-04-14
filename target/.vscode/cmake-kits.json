@@ -1,0 +1,9 @@
+[
+    {
+      "name": "GCC 12.2.0 avr",
+      "compilers": {
+        "C": "/usr/bin/avr-gcc",
+        "CXX": "/usr/bin/avr-g++"
+      }
+    }
+]
