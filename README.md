@@ -61,10 +61,10 @@ Now we're done, our repository has been checked out and we can build everything 
 
 In addition to building code via the "cmake view", we can use the small buttons/icons at the bottom of VSCode. Here we can:
 * Choose our active (sub) project that we want to build (test or target)
-* Which configuration to build (release, debug etc.)
-* Which toolchain to use for builds (avr or "normal" gcc) - but tests should be built with normal gcc and target with avr.
-* Which build target to actually build, but just use "all" that'll work.
-* We can run our code (that only works for tests) by clicking on the "play-button". That's one way to all our tests.
+* Choose which configuration to build (release, debug etc.)
+* Choose which toolchain to use for builds (GCC_12.2.0-avr or "normal" gcc=GCC_12.2.1-x86_64-alpine-linux-musl) - but tests should be built with normal gcc and target with avr.
+* Choose which build target to actually build, but just use "all" that'll work.
+* Run our code (that only works for tests) by clicking on the "play-button". That's one way to all our tests.
 * We can also run our tests by clicking on the "tickmark"-icon.
 
 You can at all times press F7, that will build your currently selected project.
