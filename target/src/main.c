@@ -27,6 +27,7 @@ void task2( void *pvParameters );
 // define semaphore handle
 SemaphoreHandle_t xTestSemaphore;
 
+//comment for pull req
 //alex main here
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
