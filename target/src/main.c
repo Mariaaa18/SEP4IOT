@@ -1,6 +1,6 @@
 /*
 * main.c
-* Author : IHA
+* Author : Group-2 IOT
 *
 * Example main file including LoRaWAN setup
 * Just for inspiration :)
