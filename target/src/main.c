@@ -14,6 +14,7 @@
 #include <ATMEGA_FreeRTOS.h>
 #include <task.h>
 #include <semphr.h>
+#include <queue.h>
 
 #include <stdio_driver.h>
 #include <serial.h>
@@ -30,6 +31,9 @@ void task2( void *pvParameters );
 
 // define semaphore handle
 SemaphoreHandle_t xTestSemaphore;
+
+//define queue
+extern QueueHandle_t xQueue2;
 
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
@@ -48,8 +52,13 @@ void create_tasks_and_semaphores(void)
 			xSemaphoreGive( ( xTestSemaphore ) );  // Make the mutex available for use, by initially "Giving" the Semaphore.
 		}
 	}
+	//Make this into queue class
 
+	//Set xMessage. In our example this Message could be a int to say the task if it can run or not.
+	//Create tasks
 	createCoTwo();
+
+	//xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
 }
 
 /*-----------------------------------------------------------*/
