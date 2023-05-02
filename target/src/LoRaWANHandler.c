@@ -8,18 +8,19 @@
 #include <stdio.h>
 
 #include <ATMEGA_FreeRTOS.h>
-
+#include <queue.h>
 #include <lora_driver.h>
 #include <status_leds.h>
-
+#include "controllerSender.h"
 // Parameters for OTAA join - You have got these in a mail from IHA
-#define LORA_appEUI "XXXXXXXXXXXXXXX"
-#define LORA_appKEY "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY"
+#define LORA_appEUI "1AB7F2972CC78C9A"
+#define LORA_appKEY "6C7EF7F5BC5266D1FAEE88AF7EA9BABD"
 
 void lora_handler_task( void *pvParameters );
 
 static lora_driver_payload_t _uplink_payload;
-
+extern QueueHandle_t xQueue2;
+sensors_data data;
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority)
 {
 	xTaskCreate(
@@ -128,11 +129,12 @@ void lora_handler_task( void *pvParameters )
 	for(;;)
 	{
 		xTaskDelayUntil( &xLastWakeTime, xFrequency );
+		xQueueReceive(xQueue2, &data, portMAX_DELAY);
 
 		// Some dummy payload
-		uint16_t hum = 12345; // Dummy humidity
-		int16_t temp = 675; // Dummy temp
-		uint16_t co2_ppm = 1050; // Dummy CO2
+		uint16_t hum = data.humidity; // Dummy humidity
+		int16_t temp = data.temperature; // Dummy temp
+		uint16_t co2_ppm = data.co2; // Dummy CO2
 
 		_uplink_payload.bytes[0] = hum >> 8;
 		_uplink_payload.bytes[1] = hum & 0xFF;
