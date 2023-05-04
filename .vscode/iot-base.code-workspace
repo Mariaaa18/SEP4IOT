@@ -17,6 +17,9 @@
 		"files.exclude": {
 			"test/": true,
 			"target/": true
+		},
+		"files.associations": {
+			"status_leds.h": "c"
 		}
 	}
 }
