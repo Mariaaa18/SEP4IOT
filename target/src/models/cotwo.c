@@ -2,29 +2,17 @@
 #include <stdio.h>
 
 #include <ATMEGA_FreeRTOS.h>
-
+#include "event_groups.h"
 #include <lora_driver.h>
 #include <status_leds.h>
 #include "cotwo.h"
 #include <mh_z19.h>
 
-#define BIT_TASK_H_READY(1 << 2)
+#define BIT_1 (1 << 1)
 static mh_z19_returnCode_t rc;
 static uint16_t cotwo = 0;
 extern EventGroupHandle_t _myEventGroupSender;
 
-void coTwo_task(void *p)
-{
-    (void)p;
-
-    mh_z19_initialise(ser_USART3);
-
-    mh_z19_returnCode_t rc;
-    for (;;)
-    {
-        run_coTow();
-    }
-}
 void run_coTow()
 {
     printf("Run Forrest Run (Inside Loop)");
@@ -39,10 +27,23 @@ void run_coTow()
 
     mh_z19_getCo2Ppm(&cotwo);
     printf("Hello, today gas chamber is at: %d", cotwo);
-
+    xEventGroupSetBits(_myEventGroupSender, BIT_1);
     // delay 25sec
     vTaskDelay(25000);
 }
+void coTwo_task(void *p)
+{
+    (void)p;
+
+    mh_z19_initialise(ser_USART3);
+
+    mh_z19_returnCode_t rc;
+    for (;;)
+    {
+        run_coTow();
+    }
+}
+
 void createCoTwo()
 {
     // maybe create the task in main
