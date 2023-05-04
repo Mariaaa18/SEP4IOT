@@ -3,4 +3,5 @@ target_sources(${PROJECT_NAME}
     main.c
     LoRaWANHandler.c
     models/cotwo.c
+    models/temperature.c
 )
