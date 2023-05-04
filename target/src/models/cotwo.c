@@ -51,6 +51,19 @@ void createCoTwo()
         coTwo_task, "CoTwoTask", configMINIMAL_STACK_SIZE + 200, NULL, 1, NULL);
 }
 
+/*
+ //Todo check with teacher how we can set the Bit from here if at the end we use callback
+void myCo2CallBack(uint16_t ppm)
+{
+
+}
+void co2_sensorInit(void)
+{
+   mh_z19_initialise(ser_USART3);
+   mh_z19_injectCallBack(myCo2CallBack);
+}
+*/
+
 int getCoTwo()
 {
     return cotwo;
