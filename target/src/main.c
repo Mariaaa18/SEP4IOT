@@ -22,7 +22,7 @@
  // Needed for LoRaWAN
 #include <lora_driver.h>
 #include <status_leds.h>
-
+#include <event_groups.h>
 #include "models/cotwo.h"
 
 // define two Tasks
@@ -33,7 +33,8 @@ void task2( void *pvParameters );
 SemaphoreHandle_t xTestSemaphore;
 
 //define queue
-extern QueueHandle_t xQueue2;
+ QueueHandle_t xQueue2;
+ EventGroupHandle_t EventGroupHandle = NULL;
 
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
@@ -41,18 +42,13 @@ void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 /*-----------------------------------------------------------*/
 void create_tasks_and_semaphores(void)
 {
-	// Semaphores are useful to stop a Task proceeding, where it should be paused to wait,
-	// because it is sharing a resource, such as the Serial port.
-	// Semaphores should only be used whilst the scheduler is running, but we can set it up here.
-	if ( xTestSemaphore == NULL )  // Check to confirm that the Semaphore has not already been created.
-	{
-		xTestSemaphore = xSemaphoreCreateMutex();  // Create a mutex semaphore.
-		if ( ( xTestSemaphore ) != NULL )
-		{
-			xSemaphoreGive( ( xTestSemaphore ) );  // Make the mutex available for use, by initially "Giving" the Semaphore.
-		}
-	}
 	//Make this into queue class
+	EventGroupHandle = xEventGroupCreate();
+    if (EventGroupHandle == NULL)
+    {
+        printf("Failed to create mutex\n");
+        return -1;
+    }
 
 	//Set xMessage. In our example this Message could be a int to say the task if it can run or not.
 	//Create tasks
@@ -79,6 +75,8 @@ void initialiseSystem()
 	lora_driver_initialise(1, NULL);
 	// Create LoRaWAN task and start it up with priority 3
 	lora_handler_initialise(3);
+
+
 }
 
 /*-----------------------------------------------------------*/
