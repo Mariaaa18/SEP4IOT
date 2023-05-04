@@ -48,7 +48,7 @@ void create_tasks_and_semaphores(void)
 {
 	//Make this into queue class
 	_myEventGroupSender = xEventGroupCreate();
-    if (EventGroupHandle == NULL)
+    if (_myEventGroupSender == NULL)
     {
         printf("Failed to create mutex\n");
         return -1;
