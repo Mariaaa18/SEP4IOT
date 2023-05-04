@@ -4,5 +4,6 @@
         "CMAKE_BUILD_TYPE" : "Release",
         "ctest-lab.buildDirectory" : "${sourceDirectory}/build",
         "cmake.buildDirectory" : "${sourceDirectory}/build"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
