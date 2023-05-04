@@ -13,7 +13,7 @@ extern QueueHandle_t xQueue2;
 
 //struct that will keep the data to be sent to the queue
 struct sensors_data data;
-extern EventGroupHandle_t EventGroupHandle;
+extern EventGroupHandle_t _myEventGroupSender;
 //sensor bits
 #define BIT_0 (1 << 0)
 #define BIT_1 (1 << 1)
@@ -54,7 +54,7 @@ void setSensorData(){
 
 void runSetData(){
 	xEventGroupWaitBits(
-		EventGroupHandle,
+		_myEventGroupSender,
 		BIT_0 | BIT_1 | BIT_2,
 		pdTRUE,
 		pdTRUE,
@@ -63,7 +63,7 @@ void runSetData(){
 	printf("--------------\n");
 	printf("Environment start to set the data\n");
 	setSensorData();
-	xEventGroupSetBits(EventGroupHandle, BIT_4);
+	xEventGroupSetBits(_myEventGroupSender, BIT_4);
 	vTaskDelay(50);
 }
 
@@ -79,7 +79,7 @@ void setData(void * p){
 void runSendDataToQueue(){
 	//Await for SetData task to be Done
 	xEventGroupWaitBits(
-			EventGroupHandle,
+			_myEventGroupSender,
 			BIT_4,
 			pdTRUE,
 			pdTRUE,
