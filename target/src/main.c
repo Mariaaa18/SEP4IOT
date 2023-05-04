@@ -23,7 +23,11 @@
 #include <lora_driver.h>
 #include <status_leds.h>
 
+#include <hih8120.h>
+#include "event_groups.h"
+
 #include "models/cotwo.h"
+#include "models/humidity.h"
 
 // define two Tasks
 void task1( void *pvParameters );
@@ -34,6 +38,7 @@ SemaphoreHandle_t xTestSemaphore;
 
 //define queue
 extern QueueHandle_t xQueue2;
+EventGroupHandle_t _myEventGroupSender= NULL;
 
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
@@ -57,8 +62,10 @@ void create_tasks_and_semaphores(void)
 	//Set xMessage. In our example this Message could be a int to say the task if it can run or not.
 	//Create tasks
 	createCoTwo();
+	createHumidity();
 
 	//xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
+	_myEventGroupSender= xEventGroupCreate();
 }
 
 /*-----------------------------------------------------------*/
@@ -79,6 +86,13 @@ void initialiseSystem()
 	lora_driver_initialise(1, NULL);
 	// Create LoRaWAN task and start it up with priority 3
 	lora_handler_initialise(3);
+	// humidity inizialiser
+	if ( HIH8120_OK == hih8120_initialise() )
+        {
+
+            // Driver initialised OK
+            // Always check what hih8120_initialise() returns
+        } 
 }
 
 /*-----------------------------------------------------------*/
