@@ -8,6 +8,8 @@
 #include "temperature.h"
 #include <hih8120.h>
 
+#define BIT_TASK_H_READY(1 << 0)
+extern EventGroupHandle_t _myEventGroupSender
 
 void runTaskIrl();
 
@@ -56,6 +58,7 @@ void runTaskIrl(){
         // cahnge to uint if doesnt work
         temperature = hih8120_getTemperature_x10();
         printf("Hello, inside temp measure loop with temp: %d", temperature);
+         xEventGroupSetBits(_myEventGroupSender, BIT_TASK_H_READY);
       
     
 
