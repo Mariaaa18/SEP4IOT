@@ -1,12 +1,14 @@
 #include <stdio.h>
-#include <avr/io.h>
+//#include <avr/io.h>
 
 #include <ATMEGA_FreeRTOS.h>
 #include <task.h>
-#include <semphr.h>
 #include <queue.h>
 #include <event_groups.h>
 #include "controllerSender.h"
+#include "../models/cotwo.h"
+#include "../models/humidity.h"
+#include "../models/temperature.h"
 
 // define queue
 QueueHandle_t xQueue2;
@@ -20,18 +22,9 @@ extern EventGroupHandle_t _myEventGroupSender;
 #define BIT_2 (1 << 2)
 // setData bit
 #define BIT_4 (1 << 4)
-void sendDataToQueue(void *p);
-void setData(void *p);
-/*-----------------------------------------------------------*/
-void controllerSenderTask(void)
-{
-	// Create tasks
-	xTaskCreate(
-		sendDataToQueue, "sendData", configMINIMAL_STACK_SIZE + 200, NULL, 1, NULL);
 
-	xTaskCreate(
-		setData, "SetData", configMINIMAL_STACK_SIZE + 200, NULL, 1, NULL);
-}
+/*-----------------------------------------------------------*/
+
 
 // Prepare Packets
 void setSensorData()
@@ -45,6 +38,7 @@ void setSensorData()
 
 void runSetData()
 {
+	printf("before the event group------\n");
 	xEventGroupWaitBits(
 		_myEventGroupSender,
 		BIT_0 | BIT_1 | BIT_2,
@@ -54,6 +48,7 @@ void runSetData()
 	vTaskDelay(40);
 	printf("--------------\n");
 	printf("Environment start to set the data\n");
+	printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n",BIT_0,BIT_1,BIT_2 );
 	setSensorData();
 	xEventGroupSetBits(_myEventGroupSender, BIT_4);
 	vTaskDelay(50);
@@ -65,12 +60,14 @@ void setData(void *p)
 	(void)p;
 	for (;;)
 	{
+		printf("SetData---\n");
 		runSetData();
 	}
 }
 
 void runSendDataToQueue()
 {
+	printf("inside send data to queuu-->");
 	// Await for SetData task to be Done
 	xEventGroupWaitBits(
 		_myEventGroupSender,
@@ -82,18 +79,56 @@ void runSendDataToQueue()
 	// Set timeout in queue so if its full it wont be blocked forever, but rather for only 1 milisecond
 	if (xQueueSendToBack(xQueue2, (void *)&dataC, 1) != pdPASS)
 	{
+		printf("queue is full");
 		//(queue is full), ignore and lose the packet.
 	}
+	printf("data added to queue-->");
+	vTaskDelay(50);
 }
 
 // 2nd Task to send data to Queue
 void sendDataToQueue(void *p)
 {
 	(void)p;
-	xQueue2 = xQueueCreate(1, sizeof(dataC));
+	
 	for (;;)
 	{
-
+	
 		runSendDataToQueue();
+
 	}
+}
+
+void testTask(){
+	for(;;){
+		vTaskDelay(1000);
+		printf("inside test task controller \n");
+	}
+
+}
+
+void controllerSenderTask()
+{
+	// Create tasks
+	xQueue2 = xQueueCreate(1, sizeof(dataC));
+	xTaskCreate(
+		sendDataToQueue, "sendData", configMINIMAL_STACK_SIZE + 200, NULL, 1, NULL);
+	/* 	xTaskCreate(
+		testTask, "testTask", configMINIMAL_STACK_SIZE + 200, NULL, 1, NULL); */
+	
+ /**
+	
+
+
+	
+
+	
+		*/
+	
+
+}
+
+void controllerSetTask(){
+	xTaskCreate(
+		setData, "SetData", configMINIMAL_STACK_SIZE + 200, NULL, 1, NULL);
 }

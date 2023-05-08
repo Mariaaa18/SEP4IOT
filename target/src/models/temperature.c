@@ -19,10 +19,10 @@ uint16_t temperature = 0;
 
 void createTemperature()
 {
-    if (HIH8120_OK == hih8120_initialise())
+    if (HIH8120_OK != hih8120_initialise())
     {
         // Driver initialised OK
-        printf("temp sensor initialized");
+        printf("temp  sensor not initialized");
         // Always check what hih8120_initialise() returns
     }
     xTaskCreate(
@@ -61,10 +61,12 @@ void runTaskTemperature()
 
         // cahnge to uint if doesnt work
         temperature = hih8120_getTemperature_x10();
-        printf("Hello, inside temp measure loop with temp: %d", temperature);
+        printf("Hello, inside temp measure loop with temp: %d\n", temperature);
         xEventGroupSetBits(_myEventGroupSender, BIT_0);
+        vTaskDelay(1);
+        printf("Temperature bit %d is set and try to send.\n",BIT_0);
         // delay 25sec
-        vTaskDelay(25000);
+        vTaskDelay(250);
     }
 }
 int getTemperature()

@@ -58,7 +58,7 @@ void runTaskHumidity()
         printf("Hello, today humidity at: %d", humidity);
         xEventGroupSetBits(_myEventGroupSender, BIT_2);
         // delay 25sec
-        vTaskDelay(25000);
+        vTaskDelay(250);
         // Get the queue now.
         // Create a messaage (value of co2)
         // point to message

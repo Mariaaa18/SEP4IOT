@@ -25,10 +25,11 @@
 
 #include <hih8120.h>
 #include "event_groups.h"
-
+#include "controllers/controllerSender.h"
 #include "models/cotwo.h"
 #include "models/humidity.h"
 #include "models/temperature.h"
+
 
 // define queue
 
@@ -52,9 +53,11 @@ void create_tasks_and_semaphores(void)
 	createCoTwo();
 	createHumidity();
 	createTemperature();
+//	controllerSenderTask();
+    controllerSetTask();
 
 	// xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
-	_myEventGroupSender = xEventGroupCreate();
+	//_myEventGroupSender = xEventGroupCreate();
 }
 
 /*-----------------------------------------------------------*/
@@ -87,8 +90,10 @@ void initialiseSystem()
 /*-----------------------------------------------------------*/
 int main(void)
 {
+	printf("In main before Initialize!!\n");
 	initialiseSystem(); // Must be done as the very first thing!!
 	printf("Program Started!!\n");
+
 	vTaskStartScheduler(); // Initialise and run the freeRTOS scheduler. Execution should never return from here.
 	/* Replace with your application code */
 	while (1)

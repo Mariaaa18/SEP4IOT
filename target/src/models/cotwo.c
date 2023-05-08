@@ -15,29 +15,32 @@ extern EventGroupHandle_t _myEventGroupSender;
 
 void run_coTow()
 {
-    printf("Run Forrest Run (Inside Loop)");
+    
+    mh_z19_returnCode_t rc;
+
+    printf("Run Forrest Run (Inside Loop)\n");
     rc = mh_z19_takeMeassuring();
 
     vTaskDelay(100);
     if (rc != MHZ19_OK)
     {
         // if there is a failure we could send something to the loraWAN? check better
-        printf("Co2 not measured.");
+        printf("Co2 not measured. \n");
     }
 
     mh_z19_getCo2Ppm(&cotwo);
-    printf("Hello, today gas chamber is at: %d", cotwo);
+    printf("Hello, today gas chamber is at: %d \n", cotwo);
     xEventGroupSetBits(_myEventGroupSender, BIT_1);
     // delay 25sec
-    vTaskDelay(25000);
+    vTaskDelay(250);
 }
 void coTwo_task(void *p)
 {
     (void)p;
 
-    mh_z19_initialise(ser_USART3);
+    
 
-    mh_z19_returnCode_t rc;
+    
     for (;;)
     {
         run_coTow();
@@ -46,6 +49,7 @@ void coTwo_task(void *p)
 
 void createCoTwo()
 {
+    mh_z19_initialise(ser_USART3);
     // maybe create the task in main
     xTaskCreate(
         coTwo_task, "CoTwoTask", configMINIMAL_STACK_SIZE + 200, NULL, 1, NULL);
