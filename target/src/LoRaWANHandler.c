@@ -127,11 +127,15 @@ void lora_handler_task(void *pvParameters)
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = pdMS_TO_TICKS(300000UL); // Upload message every 5 minutes (300000 ms)
 	xLastWakeTime = xTaskGetTickCount();
-
+	printf("I am in LoraWAN ---before-- for Loop----\n");
 	for (;;)
 	{
+
+		printf("I am in LoraWAN before waiting time----\n");
 		xTaskDelayUntil(&xLastWakeTime, xFrequency);
+		printf("------I am in LoraWAN before queue----\n");
 		xQueueReceive(xQueue2, &data, portMAX_DELAY);
+		printf("------I am in LoraWAN after queue----\n");
 
 		// Some dummy payload
 		uint16_t hum = data.humidity;	 // Dummy humidity

@@ -1,7 +1,7 @@
 /*
 * main.c
 
-* Author : Group-2 
+* Author : Group-2
 
 *
 * Example main file including LoRaWAN setup
@@ -19,26 +19,20 @@
 #include <stdio_driver.h>
 #include <serial.h>
 
- // Needed for LoRaWAN
+// Needed for LoRaWAN
 #include <lora_driver.h>
 #include <status_leds.h>
 
 #include <hih8120.h>
 #include "event_groups.h"
-
+#include "controllers/controllerSender.h"
 #include "models/cotwo.h"
 #include "models/humidity.h"
+#include "models/temperature.h"
 
-// define two Tasks
-void task1( void *pvParameters );
-void task2( void *pvParameters );
+// define queue
 
-// define semaphore handle
-SemaphoreHandle_t xTestSemaphore;
-
-//define queue
-extern QueueHandle_t xQueue2;
-EventGroupHandle_t _myEventGroupSender= NULL;
+EventGroupHandle_t _myEventGroupSender = NULL;
 
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
@@ -46,21 +40,22 @@ void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 /*-----------------------------------------------------------*/
 void create_tasks_and_semaphores(void)
 {
-	//Make this into queue class
+	// Make this into queue class
 	_myEventGroupSender = xEventGroupCreate();
-    if (_myEventGroupSender == NULL)
-    {
-        printf("Failed to create mutex\n");
-        return -1;
-    }
+	if (_myEventGroupSender == NULL)
+	{
+		printf("Failed to create mutex\n");
+	}
 
-	//Set xMessage. In our example this Message could be a int to say the task if it can run or not.
-	//Create tasks
+	// Set xMessage. In our example this Message could be a int to say the task if it can run or not.
+	// Create tasks
 	createCoTwo();
 	createHumidity();
+	createTemperature();
+	controllerSendTask();
 
-	//xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
-	_myEventGroupSender= xEventGroupCreate();
+	// xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
+	//_myEventGroupSender = xEventGroupCreate();
 }
 
 /*-----------------------------------------------------------*/
@@ -82,24 +77,24 @@ void initialiseSystem()
 	// Create LoRaWAN task and start it up with priority 3
 	lora_handler_initialise(3);
 	// humidity inizialiser
-	if ( HIH8120_OK == hih8120_initialise() )
-        {
+	if (HIH8120_OK == hih8120_initialise())
+	{
 
-            // Driver initialised OK
-            // Always check what hih8120_initialise() returns
-        } 
+		// Driver initialised OK
+		// Always check what hih8120_initialise() returns
+	}
 }
 
 /*-----------------------------------------------------------*/
 int main(void)
 {
+	printf("In main before Initialize!!\n");
 	initialiseSystem(); // Must be done as the very first thing!!
 	printf("Program Started!!\n");
+
 	vTaskStartScheduler(); // Initialise and run the freeRTOS scheduler. Execution should never return from here.
 	/* Replace with your application code */
 	while (1)
 	{
-
 	}
 }
-
