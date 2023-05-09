@@ -38,11 +38,11 @@ void createTemperature()
 
 void runTaskTemperature()
 {
-    printf("Inside the temperature measuring task \n");
+    // printf("Inside the temperature measuring task \n");
 
     for (;;)
     {
-        printf("Inside temp mesaure loop \n");
+        //  printf("Inside temp mesaure loop \n");
         if (HIH8120_OK != hih8120_wakeup())
         {
             // Something went wrong
@@ -61,12 +61,12 @@ void runTaskTemperature()
 
         // cahnge to uint if doesnt work
         temperature = hih8120_getTemperature_x10();
-        printf("Hello, inside temp measure loop with temp: %d\n", temperature);
+        printf("Temp: %d\n", temperature);
         xEventGroupSetBits(_myEventGroupSender, BIT_0);
         vTaskDelay(1);
-        printf("Temperature bit %d is set and try to send.\n",BIT_0);
+        //  printf("Temperature bit %d is set and try to send.\n",BIT_0);
         // delay 25sec
-        vTaskDelay(250);
+        vTaskDelay(2500);
     }
 }
 int getTemperature()

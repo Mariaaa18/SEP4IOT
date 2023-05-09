@@ -30,7 +30,6 @@
 #include "models/humidity.h"
 #include "models/temperature.h"
 
-
 // define queue
 
 EventGroupHandle_t _myEventGroupSender = NULL;
@@ -53,8 +52,7 @@ void create_tasks_and_semaphores(void)
 	createCoTwo();
 	createHumidity();
 	createTemperature();
-//	controllerSenderTask();
-    controllerSetTask();
+	controllerSendTask();
 
 	// xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
 	//_myEventGroupSender = xEventGroupCreate();

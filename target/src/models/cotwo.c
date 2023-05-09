@@ -15,10 +15,10 @@ extern EventGroupHandle_t _myEventGroupSender;
 
 void run_coTow()
 {
-    
+
     mh_z19_returnCode_t rc;
 
-    printf("Run Forrest Run (Inside Loop)\n");
+    //  printf("Run Forrest Run (Inside Loop)\n");
     rc = mh_z19_takeMeassuring();
 
     vTaskDelay(100);
@@ -29,18 +29,15 @@ void run_coTow()
     }
 
     mh_z19_getCo2Ppm(&cotwo);
-    printf("Hello, today gas chamber is at: %d \n", cotwo);
+    printf("CO2: %d \n", cotwo);
     xEventGroupSetBits(_myEventGroupSender, BIT_1);
     // delay 25sec
-    vTaskDelay(250);
+    vTaskDelay(2500);
 }
 void coTwo_task(void *p)
 {
     (void)p;
 
-    
-
-    
     for (;;)
     {
         run_coTow();

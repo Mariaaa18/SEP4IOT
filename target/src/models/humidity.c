@@ -55,10 +55,10 @@ void runTaskHumidity()
         vTaskDelay(100); // After the hih8120_measure() call the two wire inteface (TWI) will need minimum 1 ms to fetch the results from the sensor!
 
         humidity = hih8120_getHumidity();
-        printf("Hello, today humidity at: %d", humidity);
+        printf("Hum: %d", humidity);
         xEventGroupSetBits(_myEventGroupSender, BIT_2);
         // delay 25sec
-        vTaskDelay(250);
+        vTaskDelay(2500);
         // Get the queue now.
         // Create a messaage (value of co2)
         // point to message
