@@ -11,7 +11,7 @@ TEST(HelloTest, BasicAssertions) {
 
 TEST(HelloTest2, BasicAssertions) {
   // Expect two strings not to be equal.
-  EXPECT_STRNE("hello", "world");
+  EXPECT_STRNE("hello", "worl");
   // Expect equality.
   EXPECT_EQ(7 * 6, 42);
 }
