@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "fff/fff.h"
+#include "FreeRTOS_defs/fff.h"
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {
@@ -15,3 +15,4 @@ TEST(HelloTest2, BasicAssertions) {
   // Expect equality.
   EXPECT_EQ(7 * 6, 42);
 }
+
