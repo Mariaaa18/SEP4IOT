@@ -11,28 +11,29 @@
 #define BIT_0 (1 << 0)
 
 extern EventGroupHandle_t _myEventGroupSender;
-
+static hih8120_driverReturnCode_t rcT;
 // If not work, change to pointer
 int16_t temperature = 0;
 
 void runTemperatureTask()
 {
-
-    if (HIH8120_OK != hih8120_wakeup())
+    rcT = hih8120_wakeup();
+    if (HIH8120_OK != rcT)
     {
 
-        printf("Error in temp wake up: %d", hih8120_wakeup());
-        if (HIH8120_DRIVER_NOT_INITIALISED == hih8120_wakeup())
+        printf("Error in temp wake up: %d", rcT);
+        if (HIH8120_DRIVER_NOT_INITIALISED == rcT)
         {
             hih8120_initialise();
         }
     }
     vTaskDelay(55);
 
-    if (HIH8120_OK != hih8120_measure())
+    rcT = hih8120_measure();
+    if (HIH8120_OK != rcT)
     {
-        printf("Error in temp measure method: %d\n", hih8120_measure());
-        if (HIH8120_DRIVER_NOT_INITIALISED == hih8120_measure())
+        printf("Error in temp measure method: %d\n", rcT);
+        if (HIH8120_DRIVER_NOT_INITIALISED == rcT)
         {
             hih8120_initialise();
         }

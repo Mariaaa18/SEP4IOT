@@ -9,7 +9,7 @@
 #define BIT_2 (1 << 2)
 
 extern EventGroupHandle_t _myEventGroupSender;
-hih8120_driverReturnCode_t rcH;
+static hih8120_driverReturnCode_t rcH;
 static uint16_t humidity = 0;
 
 // Set arg with callback reference;
