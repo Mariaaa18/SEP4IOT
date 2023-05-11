@@ -33,7 +33,7 @@
 // define queue
 
 EventGroupHandle_t _myEventGroupSender = NULL;
-
+MessageBufferHandle_t downLinkMessageBufferHandle = NULL;
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 
@@ -73,8 +73,13 @@ void initialiseSystem()
 	// Status Leds driver
 	status_leds_initialise(5); // Priority 5 for internal task
 	// Initialise the LoRaWAN driver without down-link buffer
-	lora_driver_initialise(1, NULL);
-	// Create LoRaWAN task and start it up with priority 3
+	//lora_driver_initialise(1, NULL);
+
+	// Here I make room for two downlink messages in the message buffer
+	
+	downLinkMessageBufferHandle = xMessageBufferCreate(sizeof(lora_driver_payload_t)*2); // Here I make room for two downlink messages in the message buffer
+    lora_driver_initialise(1, downLinkMessageBufferHandle);  // The parameter is the USART port the RN2483 module is connected to - in this case USART1 - here no message buffer for down-link messages are defined
+	
 	lora_handler_initialise(3);
 	// humidity inizialiser
 	if (HIH8120_OK == hih8120_initialise())
