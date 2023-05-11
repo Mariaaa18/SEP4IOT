@@ -25,7 +25,15 @@ add_executable(
   ""
 )
 
-include_directories(include)
+
+
+include_directories(  
+include
+../target/include
+../target/free-rtos/src
+
+  
+)
 
 add_subdirectory(src)
 

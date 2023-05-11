@@ -1,5 +1,11 @@
 #include <gtest/gtest.h>
-#include "FreeRTOS_defs/fff.h"
+#include <FreeRTOS_defs/fff.h>
+#include "FreeRTOS_defs/FreeRTOS_FFF_MocksDeclaration.h"
+
+
+
+//Fake dirver functions
+
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {
@@ -15,4 +21,5 @@ TEST(HelloTest2, BasicAssertions) {
   // Expect equality.
   EXPECT_EQ(7 * 6, 42);
 }
+
 
