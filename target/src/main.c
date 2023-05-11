@@ -76,13 +76,14 @@ void initialiseSystem()
 	lora_driver_initialise(1, NULL);
 	// Create LoRaWAN task and start it up with priority 3
 	lora_handler_initialise(3);
-	// humidity inizialiser
+	// sensors inizialiser
 	if (HIH8120_OK == hih8120_initialise())
 	{
 
 		// Driver initialised OK
 		// Always check what hih8120_initialise() returns
 	}
+	cotwo_sensorInit();
 }
 
 /*-----------------------------------------------------------*/

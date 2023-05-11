@@ -1,4 +1,6 @@
 #pragma once
+#include <stdint.h>
 
 void createCoTwo();
-int getCoTwo();
+uint16_t getCoTwo();
+void cotwo_sensorInit();
