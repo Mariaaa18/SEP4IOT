@@ -12,7 +12,6 @@
 
 extern EventGroupHandle_t _myEventGroupSender;
 static hih8120_driverReturnCode_t rcT;
-// If not work, change to pointer
 int16_t temperature = 0;
 
 void runTemperatureTask()
@@ -53,7 +52,7 @@ void temperature_task(void *p)
         runTemperatureTask();
     }
 }
-void createTemperature()
+void createTemperatureTask()
 {
 
     xTaskCreate(

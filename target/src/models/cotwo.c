@@ -43,7 +43,7 @@ void coTwo_task(void *p)
     }
 }
 
-void createCoTwo()
+void createCoTwoTask()
 {
 
     xTaskCreate(

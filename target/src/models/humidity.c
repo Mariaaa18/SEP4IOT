@@ -51,7 +51,7 @@ void humidity_task(void *p)
     }
 }
 
-void createHumidity()
+void createHumidityTask()
 {
 
     xTaskCreate(

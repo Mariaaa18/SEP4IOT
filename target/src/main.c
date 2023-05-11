@@ -36,9 +36,9 @@ void create_tasks_and_handles(void)
 	}
 
 	// Create tasks
-	createCoTwo();
-	createHumidity();
-	createTemperature();
+	createCoTwoTask();
+	createHumidityTask();
+	createTemperatureTask();
 	controllerSendTask();
 }
 
