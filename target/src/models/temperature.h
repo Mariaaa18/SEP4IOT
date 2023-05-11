@@ -1,5 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 void createTemperature();
-void measureTemperature();
-int getTemperature();
+int16_t getTemperature();
