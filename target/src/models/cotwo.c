@@ -56,7 +56,13 @@ void createCoTwo()
 } */
 void cotwo_sensorInit()
 {
-    mh_z19_initialise(ser_USART3);
+    rc = mh_z19_initialise(ser_USART3);
+    if (rc != MHZ19_OK)
+    {
+        // if there is a failure we could send something to the loraWAN? check better
+        printf("Co2, faild to inicialise %d \n", rc);
+        mh_z19_initialise(ser_USART3);
+    }
     // mh_z19_injectCallBack(myCo2CallBack);
 }
 
