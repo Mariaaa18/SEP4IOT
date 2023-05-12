@@ -20,7 +20,10 @@
 		},
 		"files.associations": {
 			"status_leds.h": "c",
-			"controllerreceiver.h": "c"
+			"controllerreceiver.h": "c",
+			"semphr.h": "c",
+			"temperature.h": "c"
 		}
 	}
 }
+
