@@ -29,7 +29,7 @@
 #include "models/cotwo.h"
 #include "models/humidity.h"
 #include "models/temperature.h"
-#include "controllers/dataShared.c"
+#include "controllers/dataShared.h"
 
 // define queue
 

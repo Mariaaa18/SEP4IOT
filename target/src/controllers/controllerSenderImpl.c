@@ -9,7 +9,7 @@
 #include "../models/cotwo.h"
 #include "../models/humidity.h"
 #include "../models/temperature.h"
-#include "dataShared.c"
+#include "dataShared.h"
 // define queue
 QueueHandle_t xQueue2;
 

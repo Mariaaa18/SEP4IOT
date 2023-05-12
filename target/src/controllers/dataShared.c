@@ -2,13 +2,12 @@
 // #include <avr/io.h>
 #include <ATMEGA_FreeRTOS.h>
 #include <task.h>
-#include <queue.h>
-#include <event_groups.h>
 #include "controllerSender.h"
 #include "../models/cotwo.h"
 #include "../models/humidity.h"
 #include "../models/temperature.h"
 #include "semphr.h"
+#include "dataShared.h"
 
 SemaphoreHandle_t mutex;
 // struct that will keep the data to be sent to the queue
@@ -31,29 +30,26 @@ void createMutex(){
 struct sensors_data* setSensorData()
 { 
     struct sensors_data* pData = &dataS;
-    if(xSemaphoreTake(mutex, portMAX_DELAY) == pdTRUE) {
+    if (xSemaphoreTake(mutex, portMAX_DELAY) == pdTRUE) {
 	// Create new struct copy of data and put the data from sensors into it
 	
 	pData->co2 = getCoTwo();
 	pData->humidity = getHumidity();
 	pData->temperature = getTemperature();
     xSemaphoreGive(mutex);
-    
     }
     return pData;
-    
 }
 
 
-struct sensors_data* getSensorData(){
+ struct sensors_data* getSensorData(){
 
-    struct sensors_data* pData = &dataS;
+    struct sensors_data* pData= &dataS;
     if (xSemaphoreTake(mutex, portMAX_DELAY) == pdTRUE) {
         
         xSemaphoreGive(mutex);
-        
     }  
-   return pData;
-}
+    return pData;
+} 
 
 

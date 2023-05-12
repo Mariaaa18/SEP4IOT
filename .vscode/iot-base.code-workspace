@@ -19,7 +19,9 @@
 			"target/": true
 		},
 		"files.associations": {
-			"status_leds.h": "c"
+			"status_leds.h": "c",
+			"semphr.h": "c",
+			"temperature.h": "c"
 		}
 	}
 }
