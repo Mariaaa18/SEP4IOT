@@ -1,3 +1,4 @@
+
 /*
  * loraWANHandler.c
  *
@@ -11,6 +12,8 @@
 #include <queue.h>
 #include <lora_driver.h>
 #include <status_leds.h>
+#include <stream_buffer.h>
+//#include "controllers/controllerSender.h"
 #include "controllers/dataShared.h"
 // Parameters for OTAA join - You have got these in a mail from IHA
 #define LORA_appEUI "1AB7F2972CC78C9A"
@@ -19,8 +22,17 @@
 void lora_handler_task(void *pvParameters);
 
 static lora_driver_payload_t _uplink_payload;
+static lora_driver_payload_t downlinkPayload;
 extern QueueHandle_t xQueue2;
+
+
+
+extern MessageBufferHandle_t downLinkMessageBufferHandle;
+extern QueueHandle_t xQueue_DownLink;
+
 struct sensors_data data;
+struct sensors_data downData;
+
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority)
 {
 	xTaskCreate(
@@ -31,6 +43,8 @@ void lora_handler_initialise(UBaseType_t lora_handler_task_priority)
 		NULL, lora_handler_task_priority // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
 		,
 		NULL);
+
+		
 }
 
 static void _lora_setup(void)
@@ -116,7 +130,6 @@ void lora_handler_task(void *pvParameters)
 	lora_driver_resetRn2483(0);
 	// Give it a chance to wakeup
 	vTaskDelay(150);
-
 	lora_driver_flushBuffers(); // get rid of first version string from module after reset!
 
 	_lora_setup();
@@ -124,18 +137,42 @@ void lora_handler_task(void *pvParameters)
 	_uplink_payload.len = 6;
 	_uplink_payload.portNo = 2;
 
+	
+	downlinkPayload.portNo = 1;
+	downlinkPayload.len = 6;
+
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = pdMS_TO_TICKS(300000UL); // Upload message every 5 minutes (300000 ms)
 	xLastWakeTime = xTaskGetTickCount();
+
+	
+
+		if(downLinkMessageBufferHandle == NULL){
+			printf("messgage buffer is null");
+		}
+
 	printf("I am in LoraWAN ---before-- for Loop----\n");
 	for (;;)
 	{
+	
+		
 
 		printf("I am in LoraWAN before waiting time----\n");
 		xTaskDelayUntil(&xLastWakeTime, xFrequency);
 		printf("------I am in LoraWAN before queue----\n");
 		xQueueReceive(xQueue2, &data, portMAX_DELAY);
 		printf("------I am in LoraWAN after queue----\n");
+
+
+		if(downLinkMessageBufferHandle == NULL){
+			printf("messgage buffer is null insede the loop");
+		}
+
+		lora_driver_returnCode_t rc;
+			//init var for downlink
+		uint16_t maxHumSetting =0; // Max Humidity
+        int16_t maxTempSetting= 0; // Max Temperature
+		uint16_t maxCo2Setting = 0;
 
 		// Some dummy payload
 		uint16_t hum = data.humidity;	 // Dummy humidity
@@ -150,6 +187,49 @@ void lora_handler_task(void *pvParameters)
 		_uplink_payload.bytes[5] = co2_ppm & 0xFF;
 
 		status_leds_shortPuls(led_ST4); // OPTIONAL
-		printf("Upload Message >%s<\n", lora_driver_mapReturnCodeToText(lora_driver_sendUploadMessage(false, &_uplink_payload)));
+
+		if ((rc = lora_driver_sendUploadMessage(false, &_uplink_payload)) == LORA_MAC_TX_OK )
+		{
+			// The uplink message is sent and there is no downlink message received
+			printf("----message uploaded no download link--- \n");
+		 //	printf("Upload Message >%s<\n", lora_driver_mapReturnCodeToText(lora_driver_sendUploadMessage(false, &_uplink_payload)));
+		}
+		else if (rc == LORA_MAC_RX)
+		{
+			struct sensors_data *pData = &downData;
+
+			printf("message has downLink \n");
+			// The uplink message is sent and a downlink message is received
+			
+			vTaskDelay(10);
+
+			xMessageBufferReceive(downLinkMessageBufferHandle, &downlinkPayload, sizeof(lora_driver_payload_t), portMAX_DELAY);
+			// Just for Debug	
+       		 printf("DOWN LINK: from port: %d with %d bytes received! \n", downlinkPayload.portNo, downlinkPayload.len); 
+            if (6 <= downlinkPayload.len) // Check that we have got the expected 4 bytes
+            {
+       			// decode the payload into our variales
+                maxHumSetting = (downlinkPayload.bytes[0] << 8) + downlinkPayload.bytes[1];
+                maxTempSetting = (downlinkPayload.bytes[2] << 8) + downlinkPayload.bytes[3];
+				maxCo2Setting = (downlinkPayload.bytes[4] << 8) + downlinkPayload.bytes[5];
+
+				
+			pData->co2 = maxCo2Setting;
+			pData->humidity = maxHumSetting;
+			pData->temperature = maxTempSetting;
+			 vTaskDelay(50);
+			 //this if when we have the reciever controller
+			 
+			xQueueSend(xQueue_DownLink, (void *)&downData, 1);
+            }
+			printf("recieved message hum: %d temp: %d \n",maxHumSetting,maxTempSetting);
+
+			//this probaly needs some refactoring
+				
 	}
-}
+		}
+		
+
+	
+		
+
