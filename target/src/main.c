@@ -1,3 +1,4 @@
+
 /*
 * main.c
 
@@ -34,7 +35,8 @@
 // define queue
 
 EventGroupHandle_t _myEventGroupSender = NULL;
-
+QueueHandle_t xQueue_DownLink;
+struct sensors_data dataM;
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 
@@ -55,7 +57,7 @@ void create_tasks_and_semaphores(void)
 	createHumidity();
 	createTemperature();
 	controllerSendTask();
-
+  xQueue_DownLink = xQueueCreate(1, sizeof(dataM));
 	// xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
 	//_myEventGroupSender = xEventGroupCreate();
 }
