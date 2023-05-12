@@ -34,6 +34,8 @@
 
 EventGroupHandle_t _myEventGroupSender = NULL;
 MessageBufferHandle_t downLinkMessageBufferHandle = NULL;
+QueueHandle_t xQueue_DownLink;
+struct sensors_data dataM;
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 
@@ -53,6 +55,7 @@ void create_tasks_and_semaphores(void)
 	createHumidity();
 	createTemperature();
 	controllerSendTask();
+	xQueue_DownLink = xQueueCreate(1, sizeof(dataM));
 
 	// xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
 	//_myEventGroupSender = xEventGroupCreate();
@@ -63,6 +66,7 @@ void initialiseSystem()
 {
 	// Set output ports for leds used in the example
 	DDRA |= _BV(DDA0) | _BV(DDA7);
+     
 
 	// Make it possible to use stdio on COM port 0 (USB) on Arduino board - Setting 57600,8,N,1
 	stdio_initialise(ser_USART0);

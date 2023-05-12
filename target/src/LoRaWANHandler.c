@@ -24,8 +24,12 @@ static lora_driver_payload_t downlinkPayload;
 extern QueueHandle_t xQueue2;
 
 
+
 extern MessageBufferHandle_t downLinkMessageBufferHandle;
+extern QueueHandle_t xQueue_DownLink;
+
 struct sensors_data data;
+struct sensors_data downData;
 
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority)
 {
@@ -37,6 +41,8 @@ void lora_handler_initialise(UBaseType_t lora_handler_task_priority)
 		NULL, lora_handler_task_priority // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
 		,
 		NULL);
+
+		
 }
 
 static void _lora_setup(void)
@@ -131,7 +137,7 @@ void lora_handler_task(void *pvParameters)
 
 	
 	downlinkPayload.portNo = 1;
-	downlinkPayload.len = 4;
+	downlinkPayload.len = 6;
 
 	TickType_t xLastWakeTime;
 	const TickType_t xFrequency = pdMS_TO_TICKS(300000UL); // Upload message every 5 minutes (300000 ms)
@@ -155,7 +161,7 @@ void lora_handler_task(void *pvParameters)
 		xQueueReceive(xQueue2, &data, portMAX_DELAY);
 		printf("------I am in LoraWAN after queue----\n");
 
-		
+
 		if(downLinkMessageBufferHandle == NULL){
 			printf("messgage buffer is null insede the loop");
 		}
@@ -164,6 +170,7 @@ void lora_handler_task(void *pvParameters)
 			//init var for downlink
 		uint16_t maxHumSetting =0; // Max Humidity
         int16_t maxTempSetting= 0; // Max Temperature
+		uint16_t maxCo2Setting = 0;
 
 		// Some dummy payload
 		uint16_t hum = data.humidity;	 // Dummy humidity
@@ -187,6 +194,8 @@ void lora_handler_task(void *pvParameters)
 		}
 		else if (rc == LORA_MAC_RX)
 		{
+			struct sensors_data *pData = &downData;
+
 			printf("message has downLink \n");
 			// The uplink message is sent and a downlink message is received
 			
@@ -195,23 +204,30 @@ void lora_handler_task(void *pvParameters)
 			xMessageBufferReceive(downLinkMessageBufferHandle, &downlinkPayload, sizeof(lora_driver_payload_t), portMAX_DELAY);
 			// Just for Debug	
        		 printf("DOWN LINK: from port: %d with %d bytes received! \n", downlinkPayload.portNo, downlinkPayload.len); 
-            if (4 == downlinkPayload.len) // Check that we have got the expected 4 bytes
+            if (6 <= downlinkPayload.len) // Check that we have got the expected 4 bytes
             {
        			// decode the payload into our variales
                 maxHumSetting = (downlinkPayload.bytes[0] << 8) + downlinkPayload.bytes[1];
                 maxTempSetting = (downlinkPayload.bytes[2] << 8) + downlinkPayload.bytes[3];
+				maxCo2Setting = (downlinkPayload.bytes[4] << 8) + downlinkPayload.bytes[5];
+
+				
+			pData->co2 = maxCo2Setting;
+			pData->humidity = maxHumSetting;
+			pData->temperature = maxTempSetting;
+			 vTaskDelay(50);
+			 //this if when we have the reciever controller
+			 
+			xQueueSend(xQueue_DownLink, (void *)&downData, 1);
             }
 			printf("recieved message hum: %d temp: %d \n",maxHumSetting,maxTempSetting);
-		
+
+			//this probaly needs some refactoring
+				
 	}
 		}
 		
 
-
-		// downlink part
-
-		
-
-		//downlink payload
+	
 		
 }
