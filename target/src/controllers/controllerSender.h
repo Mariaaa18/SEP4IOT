@@ -7,5 +7,4 @@ struct sensors_data
 	uint16_t humidity;
 	uint16_t temperature;
 };
-
 void controllerSendTask();

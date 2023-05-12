@@ -9,12 +9,12 @@
 #include "../models/cotwo.h"
 #include "../models/humidity.h"
 #include "../models/temperature.h"
-
+#include "dataShared.c"
 // define queue
 QueueHandle_t xQueue2;
 
 // struct that will keep the data to be sent to the queue
-struct sensors_data dataC;
+struct sensors_data* dataC;
 extern EventGroupHandle_t _myEventGroupSender;
 // sensor bits
 #define BIT_0 (1 << 0)
@@ -23,7 +23,7 @@ extern EventGroupHandle_t _myEventGroupSender;
 
 /*-----------------------------------------------------------*/
 
-// Prepare Packets
+/* Prepare Packets
 void setSensorData()
 {
 	// Create new struct copy of data and put the data from sensors into it
@@ -31,7 +31,7 @@ void setSensorData()
 	pData->co2 = getCoTwo();
 	pData->humidity = getHumidity();
 	pData->temperature = getTemperature();
-}
+}*/
 
 void runSetData()
 {
@@ -46,7 +46,7 @@ void runSetData()
 	printf("--------------\n");
 	printf("Environment start to set the data\n");
 	printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
-	setSensorData();
+	dataC = setSensorData();
 
 	vTaskDelay(50);
 	if (xQueueSendToBack(xQueue2, (void *)&dataC, 1) != pdPASS)
