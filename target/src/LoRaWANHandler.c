@@ -1,3 +1,4 @@
+
 /*
  * loraWANHandler.c
  *
@@ -12,7 +13,7 @@
 #include <lora_driver.h>
 #include <status_leds.h>
 #include <stream_buffer.h>
-#include "controllers/controllerSender.h"
+#include "controllers/dataShared.h"
 // Parameters for OTAA join - You have got these in a mail from IHA
 #define LORA_appEUI "1AB7F2972CC78C9A"
 #define LORA_appKEY "6C7EF7F5BC5266D1FAEE88AF7EA9BABD"
