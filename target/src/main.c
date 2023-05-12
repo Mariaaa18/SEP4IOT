@@ -1,3 +1,4 @@
+
 /*
 * main.c
 
@@ -29,6 +30,7 @@
 #include "models/cotwo.h"
 #include "models/humidity.h"
 #include "models/temperature.h"
+#include "controllers/dataShared.h"
 
 // define queue
 
@@ -42,6 +44,7 @@ void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 /*-----------------------------------------------------------*/
 void create_tasks_and_semaphores(void)
 {
+  createMutex();
 	// Make this into queue class
 	_myEventGroupSender = xEventGroupCreate();
 	if (_myEventGroupSender == NULL)
