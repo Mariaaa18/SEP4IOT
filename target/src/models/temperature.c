@@ -1,6 +1,6 @@
 #include <stddef.h>
 #include <stdio.h>
-
+#include <stdint.h>
 #include <ATMEGA_FreeRTOS.h>
 #include "event_groups.h"
 #include <lora_driver.h>
@@ -11,65 +11,57 @@
 #define BIT_0 (1 << 0)
 
 extern EventGroupHandle_t _myEventGroupSender;
+static hih8120_driverReturnCode_t rcT;
+int16_t temperature = 0;
 
-void runTaskTemperature();
-
-// If not work, change to pointer
-uint16_t temperature = 0;
-
-void createTemperature()
+void runTemperatureTask()
 {
-    if (HIH8120_OK != hih8120_initialise())
+    rcT = hih8120_wakeup();
+    if (HIH8120_OK != rcT)
     {
-        // Driver initialised OK
-        printf("temp  sensor not initialized");
-        // Always check what hih8120_initialise() returns
+
+        printf("Error in temp wake up: %d", rcT);
+        if (HIH8120_DRIVER_NOT_INITIALISED == rcT)
+        {
+            hih8120_initialise();
+        }
     }
-    xTaskCreate(
-        runTaskTemperature, "TemperatureTask" // A name just for humans
-        ,
-        configMINIMAL_STACK_SIZE + 200 // This stack size
-        ,
-        NULL, 1 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
-        ,
-        NULL);
-    // Inject Callback Reference(Insisde the runTaskIrl, whenever there is a new measuring, we call the callback and send in args the new reading, which then the callback will replace cotwo with that reading)
+    vTaskDelay(55);
+
+    rcT = hih8120_measure();
+    if (HIH8120_OK != rcT)
+    {
+        printf("Error in temp measure method: %d\n", rcT);
+        if (HIH8120_DRIVER_NOT_INITIALISED == rcT)
+        {
+            hih8120_initialise();
+        }
+    }
+    vTaskDelay(55);
+    temperature = hih8120_getTemperature_x10();
+    printf("Temp: %d\n", temperature);
+    xEventGroupSetBits(_myEventGroupSender, BIT_0);
+    // delay 25sec
+    vTaskDelay(2500);
 }
-
-void runTaskTemperature()
+void temperature_task(void *p)
 {
-    // printf("Inside the temperature measuring task \n");
-
+    (void)p;
     for (;;)
     {
-        //  printf("Inside temp mesaure loop \n");
-        if (HIH8120_OK != hih8120_wakeup())
-        {
-            // Something went wrong
-            // Investigate the return code further
-            printf("Error in temp wake up: %d", hih8120_wakeup());
-        }
-
-        // If the callback is well implemented, we shouldnt require the TaskDelay
-        vTaskDelay(100);
-        if (HIH8120_OK != hih8120_measure())
-        {
-            printf("Error in temp measure method");
-            // Something went wrong
-            // Investigate the return code further
-        }
-
-        // cahnge to uint if doesnt work
-        temperature = hih8120_getTemperature_x10();
-        printf("Temp: %d\n", temperature);
-        xEventGroupSetBits(_myEventGroupSender, BIT_0);
-        vTaskDelay(1);
-        //  printf("Temperature bit %d is set and try to send.\n",BIT_0);
-        // delay 25sec
-        vTaskDelay(2500);
+        runTemperatureTask();
     }
 }
-int getTemperature()
+void createTemperatureTask()
+{
+
+    xTaskCreate(
+        temperature_task, "TemperatureTask",
+        configMINIMAL_STACK_SIZE + 200,
+        NULL, 1,
+        NULL);
+}
+int16_t getTemperature()
 {
     return temperature;
 }
