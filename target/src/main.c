@@ -26,7 +26,7 @@ EventGroupHandle_t _myEventGroupSender = NULL;
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 
 /*-----------------------------------------------------------*/
-void create_tasks_and_handles(void)
+void create_tasks_and_handlers(void)
 {
 	// Make this into queue class
 	_myEventGroupSender = xEventGroupCreate();
@@ -51,7 +51,7 @@ void initialiseSystem()
 	// Make it possible to use stdio on COM port 0 (USB) on Arduino board - Setting 57600,8,N,1
 	stdio_initialise(ser_USART0);
 	// Let's create some tasks
-	create_tasks_and_handles();
+	create_tasks_and_handlers();
 
 	// vvvvvvvvvvvvvvvvv BELOW IS LoRaWAN initialisation vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 	// Status Leds driver
