@@ -6,7 +6,7 @@
 #include <queue.h>
 #include <event_groups.h>
 #include "controllerReceiver.h"
-#include "shared/sharedData.h"
+#include "controller/dataShared.h"
 
 /*
 #include "../models/cotwo.h"
@@ -30,7 +30,7 @@ void retrieveQueueData()
 }   
 
 void setCurrentValue(){
-    //Get value from Mutex
+    currentValue = getSensorData();
 }
 
 void actOnTemperature(){
