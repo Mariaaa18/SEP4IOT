@@ -20,7 +20,7 @@ void lora_handler_task(void *pvParameters);
 
 static lora_driver_payload_t _uplink_payload;
 extern QueueHandle_t xQueue2;
-struct sensors_data data;
+struct sensors_data* data;
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority)
 {
 	xTaskCreate(
@@ -138,10 +138,13 @@ void lora_handler_task(void *pvParameters)
 		printf("------I am in LoraWAN after queue----\n");
 
 		// Some dummy payload
-		uint16_t hum = data.humidity;	 // Dummy humidity
-		int16_t temp = data.temperature; // Dummy temp
-		uint16_t co2_ppm = data.co2;	 // Dummy CO2
+		uint16_t hum = data->humidity;	 // Dummy humidity
+		int16_t temp = data->temperature; // Dummy temp
+		uint16_t co2_ppm = data->co2;	 // Dummy CO2
 
+		printf("L. Humidity: %d \n", data->humidity);
+		printf("L. CO2: %d \n", data->co2);
+		printf("L. Temperature: %d \n", data->temperature);
 		_uplink_payload.bytes[0] = hum >> 8;
 		_uplink_payload.bytes[1] = hum & 0xFF;
 		_uplink_payload.bytes[2] = temp >> 8;
