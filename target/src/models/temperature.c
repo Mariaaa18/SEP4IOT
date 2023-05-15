@@ -42,7 +42,7 @@ void createTemperature()
 
 void runTaskTemperature()
 {
-    int8_t n = 0;
+   
     // printf("Inside the temperature measuring task \n");
 
     for (;;)
@@ -75,15 +75,15 @@ void runTaskTemperature()
        // void rc_servo_setPosition(uint8_t servoNo, int8_t percent);
         //servo
         
-        rc_servo_setPosition(0, 1);
+        rc_servo_setPosition(0, -99);
         
-        printf("after setting servo ");
+      //  printf("after setting servo ");
 
 
         //  printf("Temperature bit %d is set and try to send.\n",BIT_0);
         // delay 25sec
-        vTaskDelay(250);
-        rc_servo_setPosition(0,55);
+        vTaskDelay(2400);
+        rc_servo_setPosition(0,99);
     }
 }
 int getTemperature()

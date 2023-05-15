@@ -150,6 +150,7 @@ void lora_handler_task(void *pvParameters)
 		}
 
 	printf("I am in LoraWAN ---before-- for Loop----\n");
+
 	for (;;)
 	{
 	
@@ -220,7 +221,7 @@ void lora_handler_task(void *pvParameters)
 			 
 			//xQueueSend(xQueue_DownLink, (void *)&downData, 1);
             }
-			printf("recieved message hum: %d temp: %d \n",maxHumSetting,maxTempSetting);
+			printf("recieved message hum: %d temp: %d  co2: %d \n",maxHumSetting,maxTempSetting,maxCo2Setting);
 
 			//this probaly needs some refactoring
 
