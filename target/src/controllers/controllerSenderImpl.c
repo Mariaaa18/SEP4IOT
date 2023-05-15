@@ -48,6 +48,9 @@ void runSetData()
 	printf("Environment start to set the data\n");
 	printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
 	dataC = setSensorData();
+	printf("\n ControllerCo2 %d \n", dataC->co2);
+	printf("\n ControllerHumidity %d \n",dataC->humidity);
+	printf("\n ControllerTemperature %d \n",dataC->temperature);
 
 	vTaskDelay(50);
 	if (xQueueSendToBack(xQueue2, (void *)&dataC, 1) != pdPASS)

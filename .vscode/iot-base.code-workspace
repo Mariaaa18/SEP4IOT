@@ -21,7 +21,22 @@
 		"files.associations": {
 			"status_leds.h": "c",
 			"semphr.h": "c",
-			"temperature.h": "c"
+			"temperature.h": "c",
+			"array": "c",
+			"*.tcc": "c",
+			"string": "c",
+			"vector": "c",
+			"string_view": "c",
+			"functional": "c",
+			"iomanip": "c",
+			"istream": "c",
+			"limits": "c",
+			"ostream": "c",
+			"ratio": "c",
+			"sstream": "c",
+			"stop_token": "c",
+			"streambuf": "c",
+			"tuple": "c"
 		}
 	}
 }

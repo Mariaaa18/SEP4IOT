@@ -24,29 +24,33 @@ void createMutex(){
     }
 }
 
-
-
 // Prepare Packets
 struct sensors_data* setSensorData()
 { 
     struct sensors_data* pData = &dataS;
     if (xSemaphoreTake(mutex, portMAX_DELAY) == pdTRUE) {
-	// Create new struct copy of data and put the data from sensors into it
-	
-	pData->co2 = getCoTwo();
-	pData->humidity = getHumidity();
-	pData->temperature = getTemperature();
-    xSemaphoreGive(mutex);
+        // Create new struct copy of data and put the data from sensors into it
+        printf("\n ----------Enter SetData \n");
+        pData->co2 = getCoTwo();
+        pData->humidity = getHumidity();
+        vTaskDelay(10);
+        printf("----------Humidity : %d \n",pData->humidity);
+        vTaskDelay(10);
+        printf("----------Humidity from Get : %d \n",getHumidity());
+        vTaskDelay(10);
+        printf("------------Temperature : %d \n ", pData->temperature);
+        vTaskDelay(10);
+        printf("------------Temperature from Get : %d \n ", getTemperature());
+        pData->temperature = getTemperature();
+        xSemaphoreGive(mutex);  
     }
     return pData;
 }
 
 
  struct sensors_data* getSensorData(){
-
     struct sensors_data* pData= &dataS;
     if (xSemaphoreTake(mutex, portMAX_DELAY) == pdTRUE) {
-        
         xSemaphoreGive(mutex);
     }  
     return pData;

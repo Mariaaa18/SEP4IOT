@@ -14,6 +14,7 @@
 #include <status_leds.h>
 #include <stream_buffer.h>
 #include "controllers/dataShared.h"
+#include "controllers/controllerSender.h"
 // Parameters for OTAA join - You have got these in a mail from IHA
 #define LORA_appEUI "1AB7F2972CC78C9A"
 #define LORA_appKEY "6C7EF7F5BC5266D1FAEE88AF7EA9BABD"
@@ -29,8 +30,8 @@ extern QueueHandle_t xQueue2;
 extern MessageBufferHandle_t downLinkMessageBufferHandle;
 extern QueueHandle_t xQueue_DownLink;
 
-struct sensors_data data;
-struct sensors_data downData;
+struct sensors_data* data;
+struct sensors_data* downData;
 
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority)
 {
@@ -173,10 +174,20 @@ void lora_handler_task(void *pvParameters)
         int16_t maxTempSetting= 0; // Max Temperature
 		uint16_t maxCo2Setting = 0;
 
+		vTaskDelay(10);
+		printf("\n LorawanHandler Humidity: %d \n",data->humidity);
+		vTaskDelay(10);
+		printf("\n LorawanHandler Co2: %d \n",data->co2);
+		vTaskDelay(10);
+		printf("\n LorawanHandler Temperature: %d \n",data->temperature);
+
+
 		// Some dummy payload
-		uint16_t hum = data.humidity;	 // Dummy humidity
-		int16_t temp = data.temperature; // Dummy temp
-		uint16_t co2_ppm = data.co2;	 // Dummy CO2
+		uint16_t hum = data->humidity;	 // Dummy humidity
+		int16_t temp = data->temperature; // Dummy temp
+		uint16_t co2_ppm = data->co2;	 // Dummy CO2
+
+		printf("HUMIDITY %d", data->humidity);
 
 		_uplink_payload.bytes[0] = hum >> 8;
 		_uplink_payload.bytes[1] = hum & 0xFF;
