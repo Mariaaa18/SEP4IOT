@@ -23,6 +23,8 @@
 #include <lora_driver.h>
 #include <status_leds.h>
 
+
+
 #include <hih8120.h>
 #include "event_groups.h"
 #include "controllers/controllerSender.h"
@@ -34,7 +36,7 @@
 
 EventGroupHandle_t _myEventGroupSender = NULL;
 MessageBufferHandle_t downLinkMessageBufferHandle = NULL;
-QueueHandle_t xQueue_DownLink;
+//QueueHandle_t xQueue_DownLink = NULL;
 struct sensors_data dataM;
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
@@ -49,13 +51,18 @@ void create_tasks_and_semaphores(void)
 		printf("Failed to create mutex\n");
 	}
 
+	
+
+
+
 	// Set xMessage. In our example this Message could be a int to say the task if it can run or not.
 	// Create tasks
 	createCoTwo();
 	createHumidity();
 	createTemperature();
 	controllerSendTask();
-	xQueue_DownLink = xQueueCreate(1, sizeof(dataM));
+
+	//xQueue_DownLink = xQueueCreate(1, sizeof(dataM));
 
 	// xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
 	//_myEventGroupSender = xEventGroupCreate();
@@ -100,6 +107,7 @@ int main(void)
 	printf("In main before Initialize!!\n");
 	initialiseSystem(); // Must be done as the very first thing!!
 	printf("Program Started!!\n");
+	
 
 	vTaskStartScheduler(); // Initialise and run the freeRTOS scheduler. Execution should never return from here.
 	/* Replace with your application code */
