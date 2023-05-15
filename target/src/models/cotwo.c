@@ -1,9 +1,7 @@
-#include <stddef.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <ATMEGA_FreeRTOS.h>
 #include "event_groups.h"
-#include <lora_driver.h>
 #include <status_leds.h>
 #include "cotwo.h"
 #include <mh_z19.h>
@@ -15,15 +13,13 @@ extern EventGroupHandle_t _myEventGroupSender;
 
 void runCoTowTask()
 {
-
-    //  printf("Run Forrest Run (Inside Loop)\n");
+    
     rc = mh_z19_takeMeassuring();
-
     vTaskDelay(110);
     if (rc != MHZ19_OK)
     {
         // if there is a failure we could send something to the loraWAN? check better
-        printf("Co2 not measured. \n");
+        printf("Co2 not measured. %d \n",rc);
         mh_z19_initialise(ser_USART3);
     }
 
@@ -45,7 +41,7 @@ void coTwo_task(void *p)
 
 void createCoTwoTask()
 {
-
+    //cotwo_sensorInit();
     xTaskCreate(
         coTwo_task, "CoTwoTask", configMINIMAL_STACK_SIZE + 200, NULL, 1, NULL);
 }

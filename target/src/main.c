@@ -60,7 +60,7 @@ void create_tasks_and_handlers(void)
 	createHumidityTask();
 	createTemperatureTask();
 	controllerSendTask();
-	xQueue_DownLink = xQueueCreate(1, sizeof(dataM));
+	//xQueue_DownLink = xQueueCreate(1, sizeof(dataM));
 	// xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
 	//_myEventGroupSender = xEventGroupCreate();
 }
@@ -84,6 +84,8 @@ void initialiseSystem()
 	lora_driver_initialise(1, NULL);
 	// Create LoRaWAN task and start it up with priority 3
 	lora_handler_initialise(3);
+	
+	cotwo_sensorInit();
 	// humidity inizialiser
 	if (HIH8120_OK == hih8120_initialise())
 	{
@@ -91,7 +93,7 @@ void initialiseSystem()
 		// Driver initialised OK
 		// Always check what hih8120_initialise() returns
 	}
-	cotwo_sensorInit();
+	
 }
 
 /*-----------------------------------------------------------*/

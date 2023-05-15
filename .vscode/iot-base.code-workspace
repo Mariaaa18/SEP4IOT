@@ -36,7 +36,10 @@
 			"sstream": "c",
 			"stop_token": "c",
 			"streambuf": "c",
-			"tuple": "c"
+			"tuple": "c",
+			"stddef.h": "c",
+			"cotwo.h": "c",
+			"mh_z19.h": "c"
 		}
 	}
 }
