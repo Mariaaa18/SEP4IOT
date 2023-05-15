@@ -37,7 +37,7 @@
 EventGroupHandle_t _myEventGroupSender = NULL;
 
 MessageBufferHandle_t downLinkMessageBufferHandle = NULL;
-QueueHandle_t xQueue_DownLink;
+//QueueHandle_t xQueue_DownLink = NULL;
 struct sensors_data dataM;
 
 // Prototype for LoRaWAN handler
@@ -80,8 +80,8 @@ void initialiseSystem()
 	// Status Leds driver
 	status_leds_initialise(5); // Priority 5 for internal task
 	// Initialise the LoRaWAN driver without down-link buffer
-	//downLinkMessageBufferHandle = xMessageBufferCreate(sizeof(lora_driver_payload_t)*2);
-	lora_driver_initialise(1, NULL);
+	downLinkMessageBufferHandle = xMessageBufferCreate(sizeof(lora_driver_payload_t)*2);
+	lora_driver_initialise(1, downLinkMessageBufferHandle);
 	// Create LoRaWAN task and start it up with priority 3
 	lora_handler_initialise(3);
 	

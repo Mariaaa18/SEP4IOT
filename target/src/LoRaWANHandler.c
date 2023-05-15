@@ -28,7 +28,7 @@ extern QueueHandle_t xQueue2;
 
 
 extern MessageBufferHandle_t downLinkMessageBufferHandle;
-extern QueueHandle_t xQueue_DownLink;
+//extern QueueHandle_t xQueue_DownLink;
 
 struct sensors_data* data;
 struct sensors_data* downData;
@@ -230,7 +230,7 @@ void lora_handler_task(void *pvParameters)
 			 vTaskDelay(50);
 			 //this if when we have the reciever controller
 			 
-			xQueueSend(xQueue_DownLink, (void *)&downData, 1);
+			//xQueueSend(xQueue_DownLink, (void *)&downData, 1);
             }
 			printf("recieved message hum: %d temp: %d \n",maxHumSetting,maxTempSetting);
 
