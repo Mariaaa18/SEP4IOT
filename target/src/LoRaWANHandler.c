@@ -221,13 +221,15 @@ void lora_handler_task(void *pvParameters)
 			 vTaskDelay(50);
 			 //this if when we have the reciever controller
 			 
-			xQueueSend(xQueue_DownLink, (void *)&downData, 1);
+			
             }
+			
 			printf("recieved message hum: %d temp: %d  co2: %d \n",maxHumSetting,maxTempSetting,maxCo2Setting);
 
 			//this probaly needs some refactoring
 
 	}
+	xQueueSend(xQueue_DownLink, (void *)&data, 1);
 		}
 		
 

@@ -14,7 +14,7 @@ static mh_z19_returnCode_t rc;
 static uint16_t cotwo = 0;
 extern EventGroupHandle_t _myEventGroupSender;
 
-void runCoTowTask()
+void runCoTwoTask()
 {
 
     //  printf("Run Forrest Run (Inside Loop)\n");
@@ -40,7 +40,7 @@ void coTwo_task(void *p)
 
     for (;;)
     {
-        runCoTowTask();
+        runCoTwoTask();
     }
 }
 

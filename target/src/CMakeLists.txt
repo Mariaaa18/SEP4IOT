@@ -8,5 +8,5 @@ target_sources(${PROJECT_NAME}
     models/temperature.c
     models/humidity.c
     controllers/dataShared.c
-    
+    controllers/controllerReceiverImpl.c
 )
