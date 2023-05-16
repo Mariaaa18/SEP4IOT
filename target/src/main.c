@@ -17,7 +17,8 @@
 #include <task.h>
 #include <semphr.h>
 #include <queue.h>
-
+#include "event_groups.h"
+#include <message_buffer.h>
 #include <stdio_driver.h>
 #include <serial.h>
 
@@ -26,7 +27,7 @@
 #include <status_leds.h>
 
 #include <hih8120.h>
-#include "event_groups.h"
+
 #include "controllers/controllerSender.h"
 #include "models/cotwo.h"
 #include "models/humidity.h"
@@ -81,6 +82,7 @@ void initialiseSystem()
 	// Status Leds driver
 	status_leds_initialise(5); // Priority 5 for internal task
 	// Initialise the LoRaWAN driver without down-link buffer
+	//vTaskDelay(100);
 	downLinkMessageBufferHandle = xMessageBufferCreate(sizeof(lora_driver_payload_t)*2);
 	lora_driver_initialise(1, downLinkMessageBufferHandle);
 	// Create LoRaWAN task and start it up with priority 3

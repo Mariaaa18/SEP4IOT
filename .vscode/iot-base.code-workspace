@@ -40,7 +40,10 @@
 			"tuple": "c",
 			"stddef.h": "c",
 			"cotwo.h": "c",
-			"mh_z19.h": "c"
+			"mh_z19.h": "c",
+			"stdio_driver.h": "c",
+			"queue.h": "c",
+			"event_groups.h": "c"
 		}
 	}
 }
