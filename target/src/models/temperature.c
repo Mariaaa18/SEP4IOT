@@ -32,7 +32,7 @@ void createTemperature()
     xTaskCreate(
         runTaskTemperature, "TemperatureTask" // A name just for humans
         ,
-        configMINIMAL_STACK_SIZE + 200 // This stack size
+        configMINIMAL_STACK_SIZE // This stack size
         ,
         NULL, 1 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
         ,
@@ -69,6 +69,7 @@ void runTaskTemperature()
         printf("Temp: %d\n", temperature);
         xEventGroupSetBits(_myEventGroupSender, BIT_0);
         vTaskDelay(1);
+        printf("heap space remaining: %d \n",xPortGetFreeHeapSize());
 
         // \param[in] servoNo The servo to set the position for (0:J14 (Servo#0) 1:J13 (Servo#1))
         //\param[in] percent The position to set the servo to [-100 .. 100]

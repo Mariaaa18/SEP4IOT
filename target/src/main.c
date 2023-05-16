@@ -27,6 +27,8 @@
 
 
 #include <hih8120.h>
+#include <stream_buffer.h>
+#include <message_buffer.h>
 #include "event_groups.h"
 #include "controllers/controllerSender.h"
 #include "models/cotwo.h"
@@ -38,7 +40,8 @@
 
 EventGroupHandle_t _myEventGroupSender = NULL;
 MessageBufferHandle_t downLinkMessageBufferHandle = NULL;
-//QueueHandle_t xQueue_DownLink = NULL;
+QueueHandle_t xQueue_DownLink = NULL;
+
 struct sensors_data dataM;
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
@@ -46,6 +49,7 @@ void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 /*-----------------------------------------------------------*/
 void create_tasks_and_semaphores(void)
 {
+	
 	createMutex();
 	// Make this into queue class
 	_myEventGroupSender = xEventGroupCreate();
@@ -53,6 +57,12 @@ void create_tasks_and_semaphores(void)
 	{
 		printf("Failed to create mutex\n");
 	}
+
+   
+    
+	
+	//
+	//createMutex();
 
 	
 
@@ -64,8 +74,9 @@ void create_tasks_and_semaphores(void)
 	createHumidity();
 	createTemperature();
 	controllerSendTask();
+	
 
-	//xQueue_DownLink = xQueueCreate(1, sizeof(dataM));
+	xQueue_DownLink = xQueueCreate(1, sizeof(dataM));
 
 	// xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
 	//_myEventGroupSender = xEventGroupCreate();
@@ -102,6 +113,8 @@ void initialiseSystem()
 		// Driver initialised OK
 		// Always check what hih8120_initialise() returns
 	}
+	
+	
 }
 
 /*-----------------------------------------------------------*/
@@ -110,11 +123,14 @@ int main(void)
 	printf("In main before Initialize!!\n");
 	initialiseSystem(); // Must be done as the very first thing!!
 	printf("Program Started!!\n");
-	
 
+	
 	vTaskStartScheduler(); // Initialise and run the freeRTOS scheduler. Execution should never return from here.
+	
+    
 	/* Replace with your application code */
 	while (1)
 	{
+		
 	}
 }

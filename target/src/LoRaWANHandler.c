@@ -13,6 +13,7 @@
 #include <lora_driver.h>
 #include <status_leds.h>
 #include <stream_buffer.h>
+#include <message_buffer.h>
 #include "controllers/dataShared.h"
 // Parameters for OTAA join - You have got these in a mail from IHA
 #define LORA_appEUI "1AB7F2972CC78C9A"
@@ -220,7 +221,7 @@ void lora_handler_task(void *pvParameters)
 			 vTaskDelay(50);
 			 //this if when we have the reciever controller
 			 
-			//xQueueSend(xQueue_DownLink, (void *)&downData, 1);
+			xQueueSend(xQueue_DownLink, (void *)&downData, 1);
             }
 			printf("recieved message hum: %d temp: %d  co2: %d \n",maxHumSetting,maxTempSetting,maxCo2Setting);
 

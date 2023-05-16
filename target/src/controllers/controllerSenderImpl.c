@@ -10,12 +10,15 @@
 #include "../models/humidity.h"
 #include "../models/temperature.h"
 #include "dataShared.h"
+#include "semphr.h"
 // define queue
 QueueHandle_t xQueue2;
 
 // struct that will keep the data to be sent to the queue
 struct sensors_data* dataC;
 extern EventGroupHandle_t _myEventGroupSender;
+
+
 // sensor bits
 #define BIT_0 (1 << 0)
 #define BIT_1 (1 << 1)
@@ -35,10 +38,11 @@ void setSensorData()
 
 void runSetData()
 {
+	
 	printf("before the event group------\n");
 	xEventGroupWaitBits(
 		_myEventGroupSender,
-		BIT_0 | BIT_1 | BIT_2,
+		BIT_0 | BIT_2,
 		pdTRUE,
 		pdTRUE,
 		portMAX_DELAY);
@@ -46,7 +50,7 @@ void runSetData()
 	printf("--------------\n");
 	printf("Environment start to set the data\n");
 	printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
-	dataC = setSensorData();
+	dataC = setSensorData(); //this is form the mutex;
 	printf("C. Humidity: %d \n", dataC->humidity);
 	printf("C. CO2: %d \n", dataC->co2);
 	printf("C. Temperature: %d \n", dataC->temperature);
@@ -74,5 +78,8 @@ void controllerSendTask()
 {
 	xQueue2 = xQueueCreate(1, sizeof(dataC));
 	xTaskCreate(
-		setData, "SetData", configMINIMAL_STACK_SIZE + 200, NULL, 1, NULL);
+		setData, "SetData", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+	
+
+	 
 }
