@@ -21,6 +21,7 @@
 #include <message_buffer.h>
 #include "event_groups.h"
 #include "controllers/controllerSender.h"
+#include "controllers/controllerReceiver.h"
 #include "models/cotwo.h"
 #include "models/humidity.h"
 #include "models/temperature.h"
@@ -52,6 +53,7 @@ void create_tasks_and_handlers(void)
 	createHumidityTask();
 	createTemperatureTask();
 	controllerSendTask();
+	controllerReceiveTask();
 
 	
 

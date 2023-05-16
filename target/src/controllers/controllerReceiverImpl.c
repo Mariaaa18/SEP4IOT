@@ -15,25 +15,27 @@
 */
 
 // extract queue
-extern QueueHandle_t xQueueDownlink;
+extern QueueHandle_t xQueue_DownLink;
 
 struct sensors_data* currentValue;
 struct sensors_data* optimalValue;
-struct sensors_data downlinkData;
+struct sensors_data* downlinkData;
 static uint16_t max = 0;
 static uint16_t min = 0;
 
 void retrieveQueueData()
 {
-    xQueueReceive(xQueueDownlink, &downlinkData, portMAX_DELAY);
+    xQueueReceive(xQueue_DownLink, &downlinkData, portMAX_DELAY);
     printf("\n ReceivedData from Downlink Queue \n");
-    optimalValue->co2 = downlinkData.co2;
-    optimalValue->temperature = downlinkData.temperature;
-    optimalValue->humidity = downlinkData.humidity;
+    optimalValue->co2 = downlinkData->co2;
+    printf("FromQueueDownlink: %d \n", optimalValue->co2)
+    optimalValue->temperature = downlinkData->temperature;
+    optimalValue->humidity = downlinkData->humidity;
 }   
 
 void setCurrentValue(){
     currentValue = getSensorData();
+    printf("FromCurrentValue: %d \n", currentValue->co2)
 }
 
 void actOnTemperature(){

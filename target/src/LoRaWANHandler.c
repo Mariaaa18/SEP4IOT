@@ -13,7 +13,7 @@
 #include <lora_driver.h>
 #include <status_leds.h>
 #include <stream_buffer.h>
-#include <message_buffer.h>
+//#include "controllers/controllerSender.h"
 #include "controllers/dataShared.h"
 // Parameters for OTAA join - You have got these in a mail from IHA
 #define LORA_appEUI "1AB7F2972CC78C9A"
@@ -31,7 +31,7 @@ extern MessageBufferHandle_t downLinkMessageBufferHandle;
 extern QueueHandle_t xQueue_DownLink;
 
 struct sensors_data* data;
-struct sensors_data downData;
+struct sensors_data* downData;
 
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority)
 {
@@ -152,7 +152,6 @@ void lora_handler_task(void *pvParameters)
 		}
 
 	printf("I am in LoraWAN ---before-- for Loop----\n");
-
 	for (;;)
 	{
 	
@@ -194,6 +193,7 @@ void lora_handler_task(void *pvParameters)
 			// The uplink message is sent and there is no downlink message received
 			printf("----message uploaded no download link--- \n");
 		 //	printf("Upload Message >%s<\n", lora_driver_mapReturnCodeToText(lora_driver_sendUploadMessage(false, &_uplink_payload)));
+			xQueueSend(xQueue_DownLink, (void *)&data, 1);
 		}
 		else if (rc == LORA_MAC_RX)
 		{
@@ -221,20 +221,17 @@ void lora_handler_task(void *pvParameters)
 			 vTaskDelay(50);
 			 //this if when we have the reciever controller
 			 
-			
+			xQueueSend(xQueue_DownLink, (void *)&downData, 1);
             }
-			
-			printf("recieved message hum: %d temp: %d  co2: %d \n",maxHumSetting,maxTempSetting,maxCo2Setting);
+			printf("recieved message hum: %d temp: %d \n",maxHumSetting,maxTempSetting);
 
 			//this probaly needs some refactoring
-
+				
 	}
-	xQueueSend(xQueue_DownLink, (void *)&data, 1);
 		}
 		
 
 	
 		
+
 }
-
-
