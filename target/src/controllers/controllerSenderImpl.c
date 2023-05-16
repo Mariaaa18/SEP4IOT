@@ -56,7 +56,7 @@ void runSetData()
 	printf("C. CO2: %d \n", dataC->co2);
 	printf("C. Temperature: %d \n", dataC->temperature);
 
-	vTaskDelay(50);
+	vTaskDelay(75);
 	if (xQueueSendToBack(xQueue2, (void *)&dataC, 1) != pdPASS)
 	{
 		printf("queue is full");
