@@ -31,7 +31,7 @@ extern MessageBufferHandle_t downLinkMessageBufferHandle;
 extern QueueHandle_t xQueue_DownLink;
 
 struct sensors_data* data;
-struct sensors_data downData;
+struct sensors_data* downData;
 
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority)
 {
@@ -193,7 +193,8 @@ void lora_handler_task(void *pvParameters)
 		{
 			// The uplink message is sent and there is no downlink message received
 			printf("----message uploaded no download link--- \n");
-		 //	printf("Upload Message >%s<\n", lora_driver_mapReturnCodeToText(lora_driver_sendUploadMessage(false, &_uplink_payload)));
+		 	//	printf("Upload Message >%s<\n", lora_driver_mapReturnCodeToText(lora_driver_sendUploadMessage(false, &_uplink_payload)));
+		 	xQueueSend(xQueue_DownLink, (void *)&data, 1);
 		}
 		else if (rc == LORA_MAC_RX)
 		{

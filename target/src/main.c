@@ -32,6 +32,7 @@
 #include <message_buffer.h>
 #include "event_groups.h"
 #include "controllers/controllerSender.h"
+#include "controllers/controllerReceiver.h"
 #include "models/cotwo.h"
 #include "models/humidity.h"
 #include "models/temperature.h"
@@ -75,6 +76,7 @@ void create_tasks_and_semaphores(void)
 	createHumidity();
 	createTemperature();
 	controllerSendTask();
+	controllerReceiveTask();
 	
 
 	xQueue_DownLink = xQueueCreate(1, sizeof(dataM));

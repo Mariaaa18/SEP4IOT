@@ -27,15 +27,18 @@ void retrieveQueueData()
 {
     xQueueReceive(xQueue_DownLink, &downlinkData, portMAX_DELAY);
     printf("\n ReceivedData from Downlink Queue \n");
+    vTaskDelay(10);
     optimalValue->co2 = downlinkData->co2;
-    printf("FromQueueDownlink: %d \n", optimalValue->co2)
+    vTaskDelay(10);
+    printf("FromQueueDownlink: %d \n", optimalValue->co2);
     optimalValue->temperature = downlinkData->temperature;
     optimalValue->humidity = downlinkData->humidity;
 }   
 
 void setCurrentValue(){
     currentValue = getSensorData();
-    printf("FromCurrentValue: %d \n", currentValue->co2)
+    vTaskDelay(10);
+    printf("FromCurrentValue: %d \n", currentValue->co2);
 }
 
 void actOnTemperature(){
