@@ -1,15 +1,4 @@
 
-
-/*
-* main.c
-
-* Author : Group-2
-
-*
-* Example main file including LoRaWAN setup
-* Just for inspiration :)
-*/
-
 #include <stdio.h>
 #include <avr/io.h>
 
@@ -37,8 +26,6 @@
 #include "models/temperature.h"
 #include "controllers/dataShared.h"
 
-// define queue
-
 EventGroupHandle_t _myEventGroupSender = NULL;
 MessageBufferHandle_t downLinkMessageBufferHandle = NULL;
 QueueHandle_t xQueue_DownLink = NULL;
@@ -48,7 +35,7 @@ struct sensors_data dataM;
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 
 /*-----------------------------------------------------------*/
-void create_tasks_and_semaphores(void)
+void create_tasks_and_handlers(void)
 {
 	
 	createMutex();
@@ -56,31 +43,23 @@ void create_tasks_and_semaphores(void)
 	_myEventGroupSender = xEventGroupCreate();
 	if (_myEventGroupSender == NULL)
 	{
-		printf("Failed to create mutex\n");
+		printf("Failed to create- _myEventGroupSender \n");
 	}
 
-   
-    
-	
-	//
-	//createMutex();
 
-	
-
-
-
-	// Set xMessage. In our example this Message could be a int to say the task if it can run or not.
 	// Create tasks
-	createCoTwo();
-	createHumidity();
-	createTemperature();
+	createCoTwoTask();
+	createHumidityTask();
+	createTemperatureTask();
 	controllerSendTask();
+
 	
 
 	xQueue_DownLink = xQueueCreate(1, sizeof(dataM));
 
 	// xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
 	//_myEventGroupSender = xEventGroupCreate();
+
 }
 
 /*-----------------------------------------------------------*/
@@ -93,7 +72,7 @@ void initialiseSystem()
 	// Make it possible to use stdio on COM port 0 (USB) on Arduino board - Setting 57600,8,N,1
 	stdio_initialise(ser_USART0);
 	// Let's create some tasks
-	create_tasks_and_semaphores();
+	create_tasks_and_handlers();
 
 	// vvvvvvvvvvvvvvvvv BELOW IS LoRaWAN initialisation vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 	// Status Leds driver
@@ -107,15 +86,16 @@ void initialiseSystem()
     lora_driver_initialise(1, downLinkMessageBufferHandle);  // The parameter is the USART port the RN2483 module is connected to - in this case USART1 - here no message buffer for down-link messages are defined
 	
 	lora_handler_initialise(3);
-	// humidity inizialiser
+	// sensors inizialiser
 	if (HIH8120_OK == hih8120_initialise())
 	{
 
 		// Driver initialised OK
 		// Always check what hih8120_initialise() returns
 	}
-	
-	
+
+	cotwo_sensorInit();
+
 }
 
 /*-----------------------------------------------------------*/
