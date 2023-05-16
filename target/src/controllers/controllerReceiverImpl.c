@@ -17,9 +17,11 @@
 // extract queue
 extern QueueHandle_t xQueueDownlink;
 
-extern sensors_data currentValue;
+extern sensors_data* currentValue;
 struct sensors_data* optimalValue;
 struct sensors_data downlinkData;
+static uint16_t max = 0;
+static uint16_t min = 0;
 
 void retrieveQueueData()
 {
@@ -35,20 +37,43 @@ void setCurrentValue(){
 
 void actOnTemperature(){
     //Act
+    max = optimalValue->temperature + 5
+    min = optimalValue->temperature - 5
+    if(currentValue->temperature > max){
+        //call on actuatorT class here
+    }else if( currentValue->temperature < min){
+        //Call if colder
+    }
 }
 
 void actOnHumidity(){
     //Act
+    max = optimalValue->humidity + 5
+    min = optimalValue->humidity - 5
+    if(currentValue->humidity > max ){
+        //call on actuatorH class here
+    }else if(currentValue->humidity < min)(
+        //call if less
+    )
 }
 
 void actOnCo2(){
     //Act
+    max = optimalValue->co2 + 5
+    min = optimalValue->co2 - 5
+    if(currentValue->co2 > max ){
+        //call on actuatorC class here
+    }else if(currentValue->co2 < min){
+        //call if less
+    }
 }
 
 void runRetriever(){
     retrieveQueueData();
     setCurrentValue();
-    
+    actOnTemperature();
+    actOnHumidity();
+    actOnCo2();
 }
 
 void setRetriever( void *p){
@@ -56,11 +81,11 @@ void setRetriever( void *p){
 	for (;;)
 	{
 		printf("RetrieveData---\n");
-		run();
+		runRetriever();
 	}
 }
 
 void controllerReceiveTask(){
 	xTaskCreate(
-		setRetriever, "setRetriever", configMINIMAL_STACK_SIZE + 200, NULL, 1, NULL);
+		setRetriever, "setRetriever", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 }
