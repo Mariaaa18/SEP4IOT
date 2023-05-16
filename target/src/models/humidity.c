@@ -25,7 +25,7 @@ void createHumidity()
     xTaskCreate(
         runTaskHumidity, "HumidityTask" // A name just for humans
         ,
-        configMINIMAL_STACK_SIZE + 200 // This stack size
+        configMINIMAL_STACK_SIZE // This stack size
         ,
         NULL, 1 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
         ,

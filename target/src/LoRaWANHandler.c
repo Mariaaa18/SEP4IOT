@@ -1,5 +1,4 @@
 
-
 /*
  * loraWANHandler.c
  *
@@ -14,6 +13,7 @@
 #include <lora_driver.h>
 #include <status_leds.h>
 #include <stream_buffer.h>
+#include <message_buffer.h>
 #include "controllers/dataShared.h"
 // Parameters for OTAA join - You have got these in a mail from IHA
 #define LORA_appEUI "1AB7F2972CC78C9A"
@@ -30,7 +30,7 @@ extern QueueHandle_t xQueue2;
 extern MessageBufferHandle_t downLinkMessageBufferHandle;
 extern QueueHandle_t xQueue_DownLink;
 
-struct sensors_data data;
+struct sensors_data* data;
 struct sensors_data downData;
 
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority)
@@ -152,6 +152,7 @@ void lora_handler_task(void *pvParameters)
 		}
 
 	printf("I am in LoraWAN ---before-- for Loop----\n");
+
 	for (;;)
 	{
 	
@@ -175,9 +176,9 @@ void lora_handler_task(void *pvParameters)
 		uint16_t maxCo2Setting = 0;
 
 		// Some dummy payload
-		uint16_t hum = data.humidity;	 // Dummy humidity
-		int16_t temp = data.temperature; // Dummy temp
-		uint16_t co2_ppm = data.co2;	 // Dummy CO2
+		uint16_t hum = data->humidity;	 // Dummy humidity
+		int16_t temp = data->temperature; // Dummy temp
+		uint16_t co2_ppm = data->co2;	 // Dummy CO2
 
 		_uplink_payload.bytes[0] = hum >> 8;
 		_uplink_payload.bytes[1] = hum & 0xFF;
@@ -222,10 +223,10 @@ void lora_handler_task(void *pvParameters)
 			 
 			xQueueSend(xQueue_DownLink, (void *)&downData, 1);
             }
-			printf("recieved message hum: %d temp: %d \n",maxHumSetting,maxTempSetting);
+			printf("recieved message hum: %d temp: %d  co2: %d \n",maxHumSetting,maxTempSetting,maxCo2Setting);
 
 			//this probaly needs some refactoring
-				
+
 	}
 		}
 		
@@ -233,4 +234,5 @@ void lora_handler_task(void *pvParameters)
 	
 		
 }
+
 
