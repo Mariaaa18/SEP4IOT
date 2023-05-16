@@ -13,7 +13,7 @@
 #include <lora_driver.h>
 #include <status_leds.h>
 #include <stream_buffer.h>
-//#include "controllers/controllerSender.h"
+#include <message_buffer.h>
 #include "controllers/dataShared.h"
 // Parameters for OTAA join - You have got these in a mail from IHA
 #define LORA_appEUI "1AB7F2972CC78C9A"
@@ -152,6 +152,7 @@ void lora_handler_task(void *pvParameters)
 		}
 
 	printf("I am in LoraWAN ---before-- for Loop----\n");
+
 	for (;;)
 	{
 	
@@ -193,7 +194,6 @@ void lora_handler_task(void *pvParameters)
 			// The uplink message is sent and there is no downlink message received
 			printf("----message uploaded no download link--- \n");
 		 //	printf("Upload Message >%s<\n", lora_driver_mapReturnCodeToText(lora_driver_sendUploadMessage(false, &_uplink_payload)));
-			xQueueSend(xQueue_DownLink, (void *)&data, 1);
 		}
 		else if (rc == LORA_MAC_RX)
 		{
@@ -223,15 +223,16 @@ void lora_handler_task(void *pvParameters)
 			 
 			xQueueSend(xQueue_DownLink, (void *)&downData, 1);
             }
-			printf("recieved message hum: %d temp: %d \n",maxHumSetting,maxTempSetting);
+			printf("recieved message hum: %d temp: %d  co2: %d \n",maxHumSetting,maxTempSetting,maxCo2Setting);
 
 			//this probaly needs some refactoring
-				
+
 	}
 		}
 		
 
 	
 		
-
 }
+
+
