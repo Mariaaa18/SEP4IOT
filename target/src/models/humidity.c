@@ -1,3 +1,4 @@
+
 #include <stddef.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -65,3 +66,4 @@ uint16_t getHumidity()
 {
     return humidity;
 }
+

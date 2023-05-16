@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 // #include <avr/io.h>
 
@@ -9,13 +10,16 @@
 #include "../models/cotwo.h"
 #include "../models/humidity.h"
 #include "../models/temperature.h"
-
+#include "dataShared.h"
+#include "semphr.h"
 // define queue
 QueueHandle_t xQueue2;
 
 // struct that will keep the data to be sent to the queue
-struct sensors_data dataC;
+struct sensors_data* dataC;
 extern EventGroupHandle_t _myEventGroupSender;
+
+
 // sensor bits
 #define BIT_0 (1 << 0)
 #define BIT_1 (1 << 1)
@@ -23,7 +27,7 @@ extern EventGroupHandle_t _myEventGroupSender;
 
 /*-----------------------------------------------------------*/
 
-// Prepare Packets
+/* Prepare Packets
 void setSensorData()
 {
 	// Create new struct copy of data and put the data from sensors into it
@@ -31,14 +35,15 @@ void setSensorData()
 	pData->co2 = getCoTwo();
 	pData->humidity = getHumidity();
 	pData->temperature = getTemperature();
-}
+}*/
 
 void runSetData()
 {
+	
 	printf("before the event group------\n");
 	xEventGroupWaitBits(
 		_myEventGroupSender,
-		BIT_0 | BIT_1 | BIT_2,
+		BIT_0 | BIT_2,
 		pdTRUE,
 		pdTRUE,
 		portMAX_DELAY);
@@ -46,7 +51,10 @@ void runSetData()
 	printf("--------------\n");
 	printf("Environment start to set the data\n");
 	printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
-	setSensorData();
+	dataC = setSensorData(); //this is form the mutex;
+	printf("C. Humidity: %d \n", dataC->humidity);
+	printf("C. CO2: %d \n", dataC->co2);
+	printf("C. Temperature: %d \n", dataC->temperature);
 
 	vTaskDelay(50);
 	if (xQueueSendToBack(xQueue2, (void *)&dataC, 1) != pdPASS)
@@ -71,5 +79,9 @@ void controllerSendTask()
 {
 	xQueue2 = xQueueCreate(1, sizeof(dataC));
 	xTaskCreate(
-		setData, "SetData", configMINIMAL_STACK_SIZE + 200, NULL, 1, NULL);
+		setData, "SetData", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+	
+
+	 
 }
+
