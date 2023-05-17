@@ -57,8 +57,9 @@ void createHumidityTask()
 
     xTaskCreate(
         humidity_task, "HumidityTask",
-        configMINIMAL_STACK_SIZE + 200,
-        NULL, 1,
+        configMINIMAL_STACK_SIZE,
+        NULL,
+         1,
         NULL);
 }
 
