@@ -58,7 +58,7 @@ void createTemperatureTask()
 
     xTaskCreate(
         temperature_task, "TemperatureTask",
-        configMINIMAL_STACK_SIZE + 200,
+        configMINIMAL_STACK_SIZE,
         NULL, 1,
         NULL);
 }
