@@ -9,5 +9,5 @@ target_sources(${PROJECT_NAME}
     models/temperature.c
     models/humidity.c
     controllers/dataShared.c
-    
+    models/actuator.c
 )

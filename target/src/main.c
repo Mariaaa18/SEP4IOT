@@ -45,6 +45,7 @@ MessageBufferHandle_t downLinkMessageBufferHandle = NULL;
 QueueHandle_t xQueue_DownLink = NULL;
 
 struct sensors_data dataM;
+
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 

@@ -3,6 +3,9 @@
 
 #include <ATMEGA_FreeRTOS.h>
 #include "event_groups.h"
+#include "../controllers/dataShared.h"
+
+#include <queue.h>
 #include <lora_driver.h>
 #include <status_leds.h>
 #include "temperature.h"
@@ -17,6 +20,9 @@ void runTaskTemperature();
 
 // If not work, change to pointer
 uint16_t temperature = 0;
+
+
+
 
 void createTemperature()
 {
@@ -34,7 +40,7 @@ void createTemperature()
         ,
         configMINIMAL_STACK_SIZE // This stack size
         ,
-        NULL, 1 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+        NULL, 0 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
         ,
         NULL);
     // Inject Callback Reference(Insisde the runTaskIrl, whenever there is a new measuring, we call the callback and send in args the new reading, which then the callback will replace cotwo with that reading)
@@ -75,16 +81,16 @@ void runTaskTemperature()
         //\param[in] percent The position to set the servo to [-100 .. 100]
        // void rc_servo_setPosition(uint8_t servoNo, int8_t percent);
         //servo
-        
-        rc_servo_setPosition(0, -99);
+       
+
         
       //  printf("after setting servo ");
+      vTaskDelay(2500);
 
 
         //  printf("Temperature bit %d is set and try to send.\n",BIT_0);
         // delay 25sec
-        vTaskDelay(2400);
-        rc_servo_setPosition(0,99);
+        
     }
 }
 int getTemperature()
