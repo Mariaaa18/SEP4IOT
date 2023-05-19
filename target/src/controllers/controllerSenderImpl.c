@@ -48,7 +48,7 @@ void runSetData()
 		pdTRUE,
 		portMAX_DELAY);
 	vTaskDelay(40);
-	printf("--------------\n");
+	
 	printf("Environment start to set the data\n");
 	printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
 	dataC = setSensorData(); //this is form the mutex;
@@ -59,7 +59,7 @@ void runSetData()
 	vTaskDelay(75);
 	if (xQueueSendToBack(xQueue2, (void *)&dataC, 1) != pdPASS)
 	{
-		printf("queue is full");
+		//printf("queue is full");
 		//(queue is full), ignore and lose the packet.
 	}
 }
@@ -70,7 +70,7 @@ void setData(void *p)
 	(void)p;
 	for (;;)
 	{
-		printf("SetData---\n");
+		
 		runSetData();
 	}
 }

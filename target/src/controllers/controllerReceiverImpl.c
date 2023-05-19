@@ -39,23 +39,30 @@ void retrieveQueueData()
 void setCurrentValue(){
     currentValue = getSensorData();
     vTaskDelay(10);
-    printf("FromCurrentValue: %d \n", currentValue->co2);
+    //printf("FromCurrentValue: %d \n", currentValue->co2);
+    
+
+
+    
 }
 
 void actOnTemperature(){
     //Act
    
-   max = optimalValue->temperature + 5;
+  max = optimalValue->temperature + 5;
    min = optimalValue->temperature - 5;
+   
     if(currentValue->temperature > max){
         //call on actuatorT class here
-       // printf("AA.temp too hih\n");
+        printf("AA.temp too hih max: %d and current: %d\n",max,currentValue->temperature);
          setServoHigh();
     }else if( currentValue->temperature < min){
         //Call if colder
-       // printf("AA. temp too low\n");
+        printf("AA. temp too low max: %d and current: %d\n",max,currentValue->temperature);
         setServoLow();
-    }
+    } 
+   
+   
 }
 
 void actOnHumidity(){
@@ -92,7 +99,7 @@ void runRetriever(){
     
     setCurrentValue();
    
-    //actOnTemperature();
+    actOnTemperature();
     //actOnHumidity();
     //actOnCo2();
 

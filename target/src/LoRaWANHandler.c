@@ -164,12 +164,14 @@ void lora_handler_task(void *pvParameters)
 
 	printf("I am in LoraWAN ---before-- for Loop----\n");
 	// testing servo
-	setServoHigh();
+
 	vTaskDelay(100);
-	setServoOptimal();
+	
 
 	for (;;)
 	{
+		
+		setServoOptimal();
 	
 		
 
@@ -212,7 +214,7 @@ void lora_handler_task(void *pvParameters)
 		if ((rc = lora_driver_sendUploadMessage(false, &_uplink_payload)) == LORA_MAC_TX_OK )
 		{
 			vTaskDelay(500);
-			setServoHigh();
+			
 			// The uplink message is sent and there is no downlink message received
 			printf("----message uploaded no download link--- \n");
 	
@@ -232,7 +234,7 @@ void lora_handler_task(void *pvParameters)
 			xMessageBufferReceive(downLinkMessageBufferHandle, &downlinkPayload, sizeof(lora_driver_payload_t), portMAX_DELAY);
 
 			vTaskDelay(500);
-			setServoLow();
+			
 			// Just for Debug	
        		 printf("DOWN LINK: from port: %d with %d bytes received! \n", downlinkPayload.portNo, downlinkPayload.len); 
             if (6 <= downlinkPayload.len) // Check that we have got the expected 4 bytes

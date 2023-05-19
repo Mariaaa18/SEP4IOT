@@ -8,12 +8,15 @@ void initServo(){
 }
 
 void setServoHigh(){
+    
     rc_servo_setPosition(0,100);
 }
 void setServoLow(){
+   
     rc_servo_setPosition(0,-100);
 }
 void setServoOptimal(){
+   
     rc_servo_setPosition(0,0);
 }
 
