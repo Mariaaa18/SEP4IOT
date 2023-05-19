@@ -92,10 +92,9 @@ void runRetriever(){
     retrieveQueueData();
     
     setCurrentValue();
-    vTaskDelay(500);
     actOnTemperature();
     actOnHumidity();
-    actOnCo2();
+    //actOnCo2();
 
     
 }
