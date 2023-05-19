@@ -49,7 +49,7 @@ void createCoTwo()
     mh_z19_initialise(ser_USART3);
     // maybe create the task in main
     xTaskCreate(
-        coTwo_task, "CoTwoTask", configMINIMAL_STACK_SIZE , NULL, 1, NULL);
+        coTwo_task, "CoTwoTask", configMINIMAL_STACK_SIZE , NULL, 3, NULL);
 }
 
 /*

@@ -14,6 +14,7 @@ SemaphoreHandle_t mutex;
 struct sensors_data dataS;
 
 
+
 /*-----------------------------------------------------------*/
 
 void createMutex(){
@@ -48,15 +49,6 @@ struct sensors_data* setSensorData()
 
 
  struct sensors_data* getSensorData(){
-
-    
-    mutex = xSemaphoreCreateMutex();
-    if (mutex == NULL) {
-        // Mutex creation failed
-        printf("mutex is null");
-        // Handle the error
-    }
-
 
     struct sensors_data* pData= &dataS;
     if (xSemaphoreTake(mutex, portMAX_DELAY) == pdTRUE) {

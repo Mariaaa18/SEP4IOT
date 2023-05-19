@@ -7,6 +7,8 @@
 #include <event_groups.h>
 #include "controllerReceiver.h"
 #include "dataShared.h"
+#include "FreeRTOSVariant.h"
+#include "../models/temperature.h"
 #include "../models/actuator.h"
 
 /*
@@ -27,30 +29,22 @@ static uint16_t min = 0;
 void retrieveQueueData()
 {
     xQueueReceive(xQueue_DownLink, &downlinkData, portMAX_DELAY);
-    printf("\n ReceivedData from Downlink Queue \n");
-    vTaskDelay(10);
+  
     optimalValue->co2 = downlinkData->co2;
-    vTaskDelay(10);
-    printf("FromQueueDownlink: %d \n", downlinkData->co2);
     optimalValue->temperature = downlinkData->temperature;
     optimalValue->humidity = downlinkData->humidity;
 }   
 
 void setCurrentValue(){
-    currentValue = getSensorData();
-    vTaskDelay(10);
-    //printf("FromCurrentValue: %d \n", currentValue->co2);
-    
-
-
-    
+    currentValue= getSensorData();
+    //printf("temp in reciever :%d",currentValue->temperature);
 }
 
 void actOnTemperature(){
     //Act
    
-  max = optimalValue->temperature + 5;
-   min = optimalValue->temperature - 5;
+  max = optimalValue->temperature + 50;
+   min = optimalValue->temperature - 50;
    
     if(currentValue->temperature > max){
         //call on actuatorT class here
@@ -67,8 +61,8 @@ void actOnTemperature(){
 
 void actOnHumidity(){
     //Act
-    max = optimalValue->humidity + 5;
-    min = optimalValue->humidity - 5;
+    max = optimalValue->humidity + 50;
+    min = optimalValue->humidity - 50;
     if(currentValue->humidity > max ){
         printf("humidity is too high\n");
         //call on actuatorH class here
@@ -81,8 +75,8 @@ void actOnHumidity(){
 
 void actOnCo2(){
     //Act
-    max = optimalValue->co2 + 5;
-    min = optimalValue->co2 - 5;
+    max = optimalValue->co2 + 200;
+    min = optimalValue->co2 - 200;
     if(currentValue->co2 > max ){
         printf("co 2 is too high \n");
         //call on actuatorC class here
@@ -98,10 +92,10 @@ void runRetriever(){
     retrieveQueueData();
     
     setCurrentValue();
-   
+    vTaskDelay(500);
     actOnTemperature();
-    //actOnHumidity();
-    //actOnCo2();
+    actOnHumidity();
+    actOnCo2();
 
     
 }

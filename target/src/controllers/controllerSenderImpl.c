@@ -49,7 +49,7 @@ void runSetData()
 		portMAX_DELAY);
 	vTaskDelay(40);
 	
-	printf("Environment start to set the data\n");
+	//printf("Environment start to set the data\n");
 	printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
 	dataC = setSensorData(); //this is form the mutex;
 	printf("C. Humidity: %d \n", dataC->humidity);
@@ -79,7 +79,7 @@ void controllerSendTask()
 {
 	xQueue2 = xQueueCreate(1, sizeof(dataC));
 	xTaskCreate(
-		setData, "SetData", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+		setData, "SetData", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 	
 
 	 
