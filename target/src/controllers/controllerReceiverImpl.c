@@ -48,11 +48,11 @@ void actOnTemperature(){
    
     if(currentValue->temperature > max){
         //call on actuatorT class here
-        printf("AA.temp too hih max: %d and current: %d\n",max,currentValue->temperature);
-         setServoHigh();
+        //printf("AA.temp too hih max: %d and current: %d\n",max,currentValue->temperature);
+        setServoHigh();
     }else if( currentValue->temperature < min){
         //Call if colder
-        printf("AA. temp too low max: %d and current: %d\n",max,currentValue->temperature);
+        //printf("AA. temp too low max: %d and current: %d\n",max,currentValue->temperature);
         setServoLow();
     } 
    
@@ -69,7 +69,6 @@ void actOnHumidity(){
     }else if(currentValue->humidity < min){
         //call if less
         printf("humidity is too low \n");
-
     }
 }
 
@@ -90,12 +89,12 @@ void runRetriever(){
    
    
     retrieveQueueData();
-    
     setCurrentValue();
     actOnTemperature();
+    vTaskDelay(100);
     actOnHumidity();
-    //actOnCo2();
-
+    vTaskDelay(100);
+    actOnCo2();
     
 }
 
@@ -103,7 +102,7 @@ void setRetriever( void *p){
     (void)p;
 	for (;;)
 	{
-		printf("RetrieveData---\n");
+		//printf("RetrieveData---\n");
      
 		runRetriever();
         
