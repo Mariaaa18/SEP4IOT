@@ -16,14 +16,18 @@
 QueueHandle_t xQueue2;
 
 // struct that will keep the data to be sent to the queue
-dataShared_t dataSensors=NULL;
+extern dataShared_t dataSensors;
 extern EventGroupHandle_t _myEventGroupSender;
+extern dataShared_t dataSensors;
 
 
 // sensor bits
 #define BIT_0 (1 << 0)
 #define BIT_1 (1 << 1)
 #define BIT_2 (1 << 2)
+
+// mutex bits
+#define BIT_5 (5 << 5)
 
 /*-----------------------------------------------------------*/
 
@@ -50,28 +54,27 @@ void runSetData()
 	vTaskDelay(40);
 	
 	//printf("Environment start to set the data\n");
-	printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
+	//printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
+
 	if(dataSensors==NULL)
 	{
 		dataSensors= dataShared_create(getCoTwo(), getHumidity(), getTemperature());
-
 	}
 	else{
-		dataShared_setValues(getCoTwo, getHumidity, getTemperature(), dataShared_t self)
-	}
-
+		dataShared_setValues(getCoTwo(), getHumidity(), getTemperature(), dataSensors);
+	}	
 
 	 //this is form the mutex;
-	printf("C. Humidity: %d \n", dataShared_getHumidity(dataSensors));
-	printf("C. CO2: %d \n", dataShared_getCo2(dataSensors));
-	printf("C. Temperature: %d \n", dataShared_getTemperature(dataSensors));
+	printf("C. Humidity: %d \n C. CO2: %d \n C. Temperature: %d \n", dataShared_getHumidity(dataSensors),dataShared_getCo2(dataSensors),dataShared_getTemperature(dataSensors));
 
 	vTaskDelay(75);
-	if (xQueueSendToBack(xQueue2, (void *)&dataSensors, 1) != pdPASS)
+
+	xEventGroupSetBits(_myEventGroupSender, BIT_5);
+	/*if (xQueueSendToBack(xQueue2, (void *)&dataSensors, 1) != pdPASS)
 	{
 		//printf("queue is full");
 		//(queue is full), ignore and lose the packet.
-	}
+	}*/
 }
 
 // 1st Task to get Data from Sensors and prepare it into a Packet.
@@ -91,7 +94,5 @@ void controllerSendTask()
 	xTaskCreate(
 		setData, "SetData", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 	
-
-	 
 }
 

@@ -2,5 +2,5 @@
 #include <stdint.h>
 
 void createHumidityTask();
-int getHumidity();
+uint16_t getHumidity();
 

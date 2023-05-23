@@ -10,7 +10,7 @@
 
 #define BIT_1 (1 << 1)
 static mh_z19_returnCode_t rc;
-static uint16_t cotwo = 0;
+uint16_t cotwo = 0;
 extern EventGroupHandle_t _myEventGroupSender;
 
 void run_coTow()
@@ -65,7 +65,7 @@ void co2_sensorInit(void)
 }
 */
 
-int getCoTwo()
+uint16_t getCoTwo()
 {
     return cotwo;
 }

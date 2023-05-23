@@ -16,7 +16,9 @@
 #include <stream_buffer.h>
 #include <message_buffer.h>
 #include "controllers/dataShared.h"
+#include "controllers/controllerSender.h"
 #include "models/actuator.h"
+#include <event_groups.h>
 // Parameters for OTAA join - You have got these in a mail from IHA
 #define LORA_appEUI "1AB7F2972CC78C9A"
 #define LORA_appKEY "6C7EF7F5BC5266D1FAEE88AF7EA9BABD"
@@ -25,14 +27,25 @@ void lora_handler_task(void *pvParameters);
 
 static lora_driver_payload_t _uplink_payload;
 static lora_driver_payload_t downlinkPayload;
-extern QueueHandle_t xQueue2;
+//extern QueueHandle_t xQueue2;
 
+
+extern EventGroupHandle_t _myEventGroupSender;
+// mutex bits
+#define BIT_5 (5 << 5)
+
+// donwlink bit
+#define BIT_6 (6 << 6)
 
 
 extern MessageBufferHandle_t downLinkMessageBufferHandle;
-extern QueueHandle_t xQueue_DownLink;
-struct dataShared_t dataDown;
-struct dataShared_t data;
+extern dataShared_t dataSensors;
+extern dataShared_t downDataSensors;
+
+
+//extern QueueHandle_t xQueue_DownLink;
+//struct dataShared_t dataDown;
+//struct dataShared_t data;
 //struct sensors_data downData;
 //struct sensors_data* downDataP;
 
@@ -159,10 +172,10 @@ void lora_handler_task(void *pvParameters)
 	
 
 		if(downLinkMessageBufferHandle == NULL){
-			printf("messgage buffer is null");
+			//printf("messgage buffer is null");
 		}
 
-	printf("I am in LoraWAN ---before-- for Loop----\n");
+	//printf("I am in LoraWAN ---before-- for Loop----\n");
 	// testing servo
 
 	vTaskDelay(100);
@@ -175,15 +188,24 @@ void lora_handler_task(void *pvParameters)
 	
 		
 
-		printf("I am in LoraWAN before waiting time----\n");
+		//printf("I am in LoraWAN before waiting time----\n");
 		xTaskDelayUntil(&xLastWakeTime, xFrequency);
-		printf("------I am in LoraWAN before queue----\n");
+
+		//Await BIT from CS
+		xEventGroupWaitBits(
+		_myEventGroupSender,
+		BIT_5,
+		pdTRUE,
+		pdTRUE,
+		portMAX_DELAY);
+		vTaskDelay(40);
+		/*printf("------I am in LoraWAN before queue----\n");
 		xQueueReceive(xQueue2, &data, portMAX_DELAY);
-		printf("------I am in LoraWAN after queue----\n");
+		printf("------I am in LoraWAN after queue----\n");*/
 
 
 		if(downLinkMessageBufferHandle == NULL){
-			printf("messgage buffer is null insede the loop");
+			//printf("messgage buffer is null insede the loop");
 		}
 
 		lora_driver_returnCode_t rc;
@@ -192,13 +214,14 @@ void lora_handler_task(void *pvParameters)
         int16_t maxTempSetting= 0; // Max Temperature
 		uint16_t maxCo2Setting = 0;
 
-		printf("L. Humidity: %d \n", data->humidity);
+		//printf("L. Humidity: %d \n", data->humidity);
 		
 
 		// Some dummy payload
-		uint16_t hum =dataShared_getCo2(data) ;	 // Dummy humidity
-		int16_t temp = dataShared_getTemperature(data); // Dummy temp
-		uint16_t co2_ppm = dataShared_getCo2(data);	 // Dummy CO2
+		uint16_t hum = dataShared_getHumidity(dataSensors) ;	 // Dummy humidity
+		printf("LW. hum: %d \n",  dataShared_getHumidity(dataSensors));
+		int16_t temp = dataShared_getTemperature(dataSensors); // Dummy temp
+		uint16_t co2_ppm = dataShared_getCo2(dataSensors);	 // Dummy CO2
 
 		_uplink_payload.bytes[0] = hum >> 8;
 		_uplink_payload.bytes[1] = hum & 0xFF;
@@ -223,10 +246,7 @@ void lora_handler_task(void *pvParameters)
 		}
 		else if (rc == LORA_MAC_RX)
 		{
-			
-		
-
-			printf("message has downLink \n");
+			//printf("message has downLink \n");
 			// The uplink message is sent and a downlink message is received
 			
 			vTaskDelay(10);
@@ -245,24 +265,23 @@ void lora_handler_task(void *pvParameters)
 				maxCo2Setting = (downlinkPayload.bytes[4] << 8) + downlinkPayload.bytes[5];
 				vTaskDelay(100);
 
+			if(downDataSensors==NULL){
+				downDataSensors = dataShared_create(maxCo2Setting, maxHumSetting,maxTempSetting );
+			}else{
+				dataShared_setValues(maxCo2Setting,maxHumSetting,maxTempSetting, downDataSensors);
+			}
 			
-				
-		
-
-		
-			destroy(dataDown);
-			dataDown = dataShared_create(maxCo2Setting, maxHumSetting,maxTempSetting );
 
 			 //this if when we have the reciever controller
 
-			if(xQueueSend(xQueue_DownLink, (void *)&dataDown, portMAX_DELAY) !=pdPASS){
+			/*if(xQueueSend(xQueue_DownLink, (void *)&dataDown, portMAX_DELAY) !=pdPASS){
 				printf("Failed to send item");
-			}
+			}*/
 
 		
 
             }
-			printf("recieved message hum: %d temp(from struct): %d  co2: %d \n",maxHumSetting,data->temperature,maxCo2Setting);
+			printf("recieved message hum: %d temp(from struct): %d  co2: %d \n",maxHumSetting,maxTempSetting,maxCo2Setting);
 
 			//this probaly needs some refactoring
 

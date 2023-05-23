@@ -75,7 +75,7 @@ void myHumidityCallBack(uint16_t ppm)
     // mh_z19_getCo2Ppm(&cotwo);
 }
 
-int getHumidity()
+uint16_t getHumidity()
 {
     return humidity;
 }

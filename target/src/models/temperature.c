@@ -29,7 +29,7 @@ void createTemperature()
     if (HIH8120_OK != hih8120_initialise())
     {
         // Driver initialised OK
-        printf("temp  sensor not initialized");
+        //printf("temp  sensor not initialized");
         // Always check what hih8120_initialise() returns
     }
     //init servo
@@ -58,14 +58,14 @@ void runTaskTemperature()
         {
             // Something went wrong
             // Investigate the return code further
-            printf("Error in temp wake up: %d", hih8120_wakeup());
+            //printf("Error in temp wake up: %d", hih8120_wakeup());
         }
 
         // If the callback is well implemented, we shouldnt require the TaskDelay
         vTaskDelay(100);
         if (HIH8120_OK != hih8120_measure())
         {
-            printf("Error in temp measure method");
+            //printf("Error in temp measure method");
             // Something went wrong
             // Investigate the return code further
         }
@@ -93,7 +93,7 @@ void runTaskTemperature()
         
     }
 }
-int getTemperature()
+int16_t getTemperature()
 {
     return temperature;
 }

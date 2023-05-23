@@ -2,4 +2,4 @@
 
 void createTemperature();
 void measureTemperature();
-int getTemperature();
+int16_t getTemperature();
