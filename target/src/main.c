@@ -1,15 +1,3 @@
-
-
-/*
-* main.c
-
-* Author : Group-2
-
-*
-* Example main file including LoRaWAN setup
-* Just for inspiration :)
-*/
-
 #include <stdio.h>
 #include <avr/io.h>
 
@@ -39,17 +27,16 @@
 #include "controllers/dataShared.h"
 
 // define queue
-
 EventGroupHandle_t _myEventGroupSender = NULL;
 MessageBufferHandle_t downLinkMessageBufferHandle = NULL;
 QueueHandle_t xQueue_DownLink = NULL;
 
 struct sensors_data dataM;
-
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 
 /*-----------------------------------------------------------*/
+
 void create_tasks_and_semaphores(void)
 {
 	
@@ -107,7 +94,7 @@ void initialiseSystem()
 	// Here I make room for two downlink messages in the message buffer
 	
 	downLinkMessageBufferHandle = xMessageBufferCreate(sizeof(lora_driver_payload_t)*2); // Here I make room for two downlink messages in the message buffer
-    lora_driver_initialise(1, downLinkMessageBufferHandle);  // The parameter is the USART port the RN2483 module is connected to - in this case USART1 - here no message buffer for down-link messages are defined
+  lora_driver_initialise(1, downLinkMessageBufferHandle);  // The parameter is the USART port the RN2483 module is connected to - in this case USART1 - here no message buffer for down-link messages are defined
 	
 	lora_handler_initialise(3);
 	// humidity inizialiser
@@ -117,8 +104,6 @@ void initialiseSystem()
 		// Driver initialised OK
 		// Always check what hih8120_initialise() returns
 	}
-	
-	
 }
 
 /*-----------------------------------------------------------*/
