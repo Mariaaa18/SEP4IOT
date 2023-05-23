@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <avr/io.h>
 
@@ -21,11 +20,13 @@
 #include <message_buffer.h>
 #include "event_groups.h"
 #include "controllers/controllerSender.h"
+#include "controllers/controllerReceiver.h"
 #include "models/cotwo.h"
 #include "models/humidity.h"
 #include "models/temperature.h"
 #include "controllers/dataShared.h"
 
+// define queue
 EventGroupHandle_t _myEventGroupSender = NULL;
 MessageBufferHandle_t downLinkMessageBufferHandle = NULL;
 QueueHandle_t xQueue_DownLink = NULL;
@@ -35,7 +36,8 @@ struct sensors_data dataM;
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 
 /*-----------------------------------------------------------*/
-void create_tasks_and_handlers(void)
+
+void create_tasks_and_semaphores(void)
 {
 	
 	createMutex();
@@ -43,23 +45,32 @@ void create_tasks_and_handlers(void)
 	_myEventGroupSender = xEventGroupCreate();
 	if (_myEventGroupSender == NULL)
 	{
-		printf("Failed to create- _myEventGroupSender \n");
+		printf("Failed to create mutex\n");
 	}
 
+   
+    
+	
+	//
+	//createMutex();
 
+	
+
+
+
+	// Set xMessage. In our example this Message could be a int to say the task if it can run or not.
 	// Create tasks
-	createCoTwoTask();
-	createHumidityTask();
-	createTemperatureTask();
+	createCoTwo();
+	createHumidity();
+	createTemperature();
 	controllerSendTask();
-
+	controllerReceiveTask();
 	
 
 	xQueue_DownLink = xQueueCreate(1, sizeof(dataM));
 
 	// xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
 	//_myEventGroupSender = xEventGroupCreate();
-
 }
 
 /*-----------------------------------------------------------*/
@@ -72,7 +83,7 @@ void initialiseSystem()
 	// Make it possible to use stdio on COM port 0 (USB) on Arduino board - Setting 57600,8,N,1
 	stdio_initialise(ser_USART0);
 	// Let's create some tasks
-	create_tasks_and_handlers();
+	create_tasks_and_semaphores();
 
 	// vvvvvvvvvvvvvvvvv BELOW IS LoRaWAN initialisation vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 	// Status Leds driver
@@ -83,19 +94,16 @@ void initialiseSystem()
 	// Here I make room for two downlink messages in the message buffer
 	
 	downLinkMessageBufferHandle = xMessageBufferCreate(sizeof(lora_driver_payload_t)*2); // Here I make room for two downlink messages in the message buffer
-    lora_driver_initialise(1, downLinkMessageBufferHandle);  // The parameter is the USART port the RN2483 module is connected to - in this case USART1 - here no message buffer for down-link messages are defined
+  lora_driver_initialise(1, downLinkMessageBufferHandle);  // The parameter is the USART port the RN2483 module is connected to - in this case USART1 - here no message buffer for down-link messages are defined
 	
 	lora_handler_initialise(3);
-	// sensors inizialiser
+	// humidity inizialiser
 	if (HIH8120_OK == hih8120_initialise())
 	{
 
 		// Driver initialised OK
 		// Always check what hih8120_initialise() returns
 	}
-
-	cotwo_sensorInit();
-
 }
 
 /*-----------------------------------------------------------*/

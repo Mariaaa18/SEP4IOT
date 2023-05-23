@@ -43,23 +43,23 @@ void runSetData()
 	printf("before the event group------\n");
 	xEventGroupWaitBits(
 		_myEventGroupSender,
-		BIT_0 | BIT_2,
+		BIT_0 | BIT_1 | BIT_2,
 		pdTRUE,
 		pdTRUE,
 		portMAX_DELAY);
 	vTaskDelay(40);
-	printf("--------------\n");
-	printf("Environment start to set the data\n");
+	
+	//printf("Environment start to set the data\n");
 	printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
 	dataC = setSensorData(); //this is form the mutex;
 	printf("C. Humidity: %d \n", dataC->humidity);
 	printf("C. CO2: %d \n", dataC->co2);
 	printf("C. Temperature: %d \n", dataC->temperature);
 
-	vTaskDelay(50);
+	vTaskDelay(75);
 	if (xQueueSendToBack(xQueue2, (void *)&dataC, 1) != pdPASS)
 	{
-		printf("queue is full");
+		//printf("queue is full");
 		//(queue is full), ignore and lose the packet.
 	}
 }
@@ -70,7 +70,7 @@ void setData(void *p)
 	(void)p;
 	for (;;)
 	{
-		printf("SetData---\n");
+		
 		runSetData();
 	}
 }
@@ -79,7 +79,7 @@ void controllerSendTask()
 {
 	xQueue2 = xQueueCreate(1, sizeof(dataC));
 	xTaskCreate(
-		setData, "SetData", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
+		setData, "SetData", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 	
 
 	 

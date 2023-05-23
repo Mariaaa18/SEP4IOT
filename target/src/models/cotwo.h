@@ -3,6 +3,6 @@
 #include <stdint.h>
 
 void createCoTwoTask();
-uint16_t getCoTwo();
+int getCoTwo();
 void cotwo_sensorInit();
 
