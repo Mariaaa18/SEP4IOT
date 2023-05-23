@@ -1,13 +1,20 @@
-
 #include <stddef.h>
 #include <stdio.h>
-#include <stdint.h>
 #include <ATMEGA_FreeRTOS.h>
 #include "event_groups.h"
+#include <lora_driver.h>
+#include <status_leds.h>
 #include "humidity.h"
+#include "cotwo.h"
+#include "temperature.h"
 #include <hih8120.h>
 
 #define BIT_2 (1 << 2)
+extern EventGroupHandle_t _myEventGroupSender;
+
+// Include other 2 tasks in order for queue to work, as well as main/environment.
+
+void runTaskHumidity();
 
 // If not work, change to pointer
 uint16_t humidity = 0;
@@ -27,57 +34,48 @@ void createHumidity()
 }
 
 // Set arg with callback reference;
-
 void runTaskHumidity()
 {
-    rcH = hih8120_wakeup();
-
-    if (HIH8120_OK != rcH)
-    {
-        printf("Error in humidity wake up: %d", rcH);
-        if (HIH8120_DRIVER_NOT_INITIALISED == rcH)
-        {
-            hih8120_initialise();
-        }
-    }
-
-    vTaskDelay(57);
-    if (HIH8120_OK != hih8120_measure())
-    {
-        printf("Error to mesure humidity");
-    }
-
-    vTaskDelay(55);
-
-    humidity = hih8120_getHumidity();
-    printf("Hum: %d", humidity);
-    xEventGroupSetBits(_myEventGroupSender, BIT_2);
-    // delay 25sec
-    vTaskDelay(2500);
-}
-void humidity_task(void *p)
-{
-    (void)p;
 
     for (;;)
     {
-        runTaskHumidity();
+        if (HIH8120_OK != hih8120_wakeup())
+        {
+            // Something went wrong
+            // Investigate the return code further
+        }
+
+        vTaskDelay(100); // After the hih8120_wakeup() call the sensor will need minimum 50 ms to be ready!
+        if (HIH8120_OK != hih8120_measure())
+        {
+            // Something went wrong
+            // Investigate the return code further
+        }
+
+        vTaskDelay(100); // After the hih8120_measure() call the two wire inteface (TWI) will need minimum 1 ms to fetch the results from the sensor!
+
+        humidity = hih8120_getHumidity();
+        printf("Hum: %d \n", humidity);
+        xEventGroupSetBits(_myEventGroupSender, BIT_2);
+        // delay 25sec
+        vTaskDelay(2500);
+        // Get the queue now.
+        // Create a messaage (value of co2)
+        // point to message
+        // xMessage *pxPointerMessage = &myMessage
+        // Send it to the queue (xQueueSend(The handle of the queue , The ADDRESS of the variable that holds the message, Delay))
     }
 }
 
-void createHumidityTask()
+// Inside the Callback, we will set the global variable to be equal the argument passed(or in other words, the latest measuring).
+// We use this if we want to get a new measuring each time that there is a new measuring read, otherwise wed set a timeout and wait for a new value.
+void myHumidityCallBack(uint16_t ppm)
 {
-
-    xTaskCreate(
-        humidity_task, "HumidityTask",
-        configMINIMAL_STACK_SIZE,
-        NULL,
-         1,
-        NULL);
+    // If doesnt update, add here
+    // mh_z19_getCo2Ppm(&cotwo);
 }
 
-uint16_t getHumidity()
+int getHumidity()
 {
     return humidity;
 }
-
