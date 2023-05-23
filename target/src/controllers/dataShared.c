@@ -9,7 +9,7 @@
 #include "semphr.h"
 #include "dataShared.h"
 
-typedef struct sensors_data {
+typedef struct dataShared {
     uint16_t co2;
     uint16_t humidity;
     int temperature;
@@ -22,7 +22,7 @@ dataShared_t dataShared_create(uint16_t co2, uint16_t humidity, int temperature)
         return NULL;
     }
 
-    _newDataShared->co2=co2;
+    _newDataShared->co2 = co2;
     _newDataShared->humidity=humidity;
     _newDataShared->temperature= temperature;
     return _newDataShared; 
@@ -38,7 +38,7 @@ void dataShared_destroy(dataShared_t self)
 void dataShared_setValues(uint16_t co2, uint16_t humidity, int temperature, dataShared_t self){
  
     self->co2= co2;
-    self-> humididty=humidity;
+    self-> humidity=humidity;
     self-> temperature= temperature;
    
 }

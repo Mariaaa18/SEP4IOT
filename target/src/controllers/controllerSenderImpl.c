@@ -16,7 +16,7 @@
 QueueHandle_t xQueue2;
 
 // struct that will keep the data to be sent to the queue
-dataShared_t dataSensors;
+dataShared_t dataSensors=NULL;
 extern EventGroupHandle_t _myEventGroupSender;
 
 
@@ -51,8 +51,16 @@ void runSetData()
 	
 	//printf("Environment start to set the data\n");
 	printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
-	destroy(dataSensors);
-	dataSensors= dataShared_create(getCoTwo(), getHumidity(), getTemperature());
+	if(dataSensors==NULL)
+	{
+		dataSensors= dataShared_create(getCoTwo(), getHumidity(), getTemperature());
+
+	}
+	else{
+		dataShared_setValues(getCoTwo, getHumidity, getTemperature(), dataShared_t self)
+	}
+
+
 	 //this is form the mutex;
 	printf("C. Humidity: %d \n", dataShared_getHumidity(dataSensors));
 	printf("C. CO2: %d \n", dataShared_getCo2(dataSensors));
