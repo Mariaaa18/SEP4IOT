@@ -5,11 +5,11 @@
 #include <task.h>
 #include <queue.h>
 #include <event_groups.h>
-#include "controllerReceiver.h"
-#include "dataShared.h"
+#include "../../drivers/include/controllerReceiver.h"
+#include "../../drivers/include/dataShared.h"
 #include "FreeRTOSVariant.h"
-#include "../models/temperature.h"
-#include "../models/actuator.h"
+#include "../../drivers/include/temperature.h"
+#include "../../drivers/include/actuator.h"
 
 /*
 #include "../models/cotwo.h"

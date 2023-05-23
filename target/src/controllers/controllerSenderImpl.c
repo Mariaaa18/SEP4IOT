@@ -6,11 +6,11 @@
 #include <task.h>
 #include <queue.h>
 #include <event_groups.h>
-#include "controllerSender.h"
-#include "../models/cotwo.h"
-#include "../models/humidity.h"
-#include "../models/temperature.h"
-#include "dataShared.h"
+#include "../../drivers/include/controllerSender.h"
+#include "../../drivers/include/cotwo.h"
+#include "../../drivers/include/humidity.h"
+#include "../../drivers/include/temperature.h"
+#include "../../drivers/include/dataShared.h"
 #include "semphr.h"
 // define queue
 QueueHandle_t xQueue2;

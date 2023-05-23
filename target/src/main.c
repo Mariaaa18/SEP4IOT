@@ -19,12 +19,12 @@
 #include <stream_buffer.h>
 #include <message_buffer.h>
 #include "event_groups.h"
-#include "controllers/controllerSender.h"
-#include "controllers/controllerReceiver.h"
-#include "models/cotwo.h"
-#include "models/humidity.h"
-#include "models/temperature.h"
-#include "controllers/dataShared.h"
+#include "../drivers/include/controllerSender.h"
+#include "../drivers/include/controllerReceiver.h"
+#include "../drivers/include/cotwo.h"
+#include "../drivers/include/humidity.h"
+#include "../drivers/include/temperature.h"
+#include "../drivers/include/dataShared.h"
 
 // define queue
 EventGroupHandle_t _myEventGroupSender = NULL;

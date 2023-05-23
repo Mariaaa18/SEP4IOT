@@ -2,12 +2,12 @@
 // #include <avr/io.h>
 #include <ATMEGA_FreeRTOS.h>
 #include <task.h>
-#include "controllerSender.h"
-#include "../models/cotwo.h"
-#include "../models/humidity.h"
-#include "../models/temperature.h"
+#include "../../drivers/include/controllerSender.h"
+#include "../../drivers/include/cotwo.h"
+#include "../../drivers/include/humidity.h"
+#include "../../drivers/include/temperature.h"
 #include "semphr.h"
-#include "dataShared.h"
+#include "../../drivers/include/dataShared.h"
 
 SemaphoreHandle_t mutex;
 // struct that will keep the data to be sent to the queue
