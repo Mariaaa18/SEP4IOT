@@ -1,9 +1,4 @@
-struct sensors_data
-{
-	uint16_t co2;
-	uint16_t humidity;
-	uint16_t temperature;
-};
+typedef struct dataShared* dataShared_t;
 void createMutex();
-struct sensors_data* setSensorData();
+void setSensorData();
 struct sensors_data* getSensorData();

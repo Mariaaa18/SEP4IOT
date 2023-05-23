@@ -16,7 +16,7 @@
 QueueHandle_t xQueue2;
 
 // struct that will keep the data to be sent to the queue
-struct sensors_data* dataC;
+dataShared_t dataSensors;
 extern EventGroupHandle_t _myEventGroupSender;
 
 
@@ -51,13 +51,15 @@ void runSetData()
 	
 	//printf("Environment start to set the data\n");
 	printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
-	dataC = setSensorData(); //this is form the mutex;
-	printf("C. Humidity: %d \n", dataC->humidity);
-	printf("C. CO2: %d \n", dataC->co2);
-	printf("C. Temperature: %d \n", dataC->temperature);
+	destroy(dataSensors);
+	dataSensors= dataShared_create(getCoTwo(), getHumidity(), getTemperature());
+	 //this is form the mutex;
+	printf("C. Humidity: %d \n", dataShared_getHumidity(dataSensors));
+	printf("C. CO2: %d \n", dataShared_getCo2(dataSensors));
+	printf("C. Temperature: %d \n", dataShared_getTemperature(dataSensors));
 
 	vTaskDelay(75);
-	if (xQueueSendToBack(xQueue2, (void *)&dataC, 1) != pdPASS)
+	if (xQueueSendToBack(xQueue2, (void *)&dataSensors, 1) != pdPASS)
 	{
 		//printf("queue is full");
 		//(queue is full), ignore and lose the packet.
@@ -77,7 +79,7 @@ void setData(void *p)
 
 void controllerSendTask()
 {
-	xQueue2 = xQueueCreate(1, sizeof(dataC));
+	xQueue2 = xQueueCreate(1, sizeof(dataSensors));
 	xTaskCreate(
 		setData, "SetData", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 	

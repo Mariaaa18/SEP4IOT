@@ -9,53 +9,60 @@
 #include "semphr.h"
 #include "dataShared.h"
 
-SemaphoreHandle_t mutex;
-// struct that will keep the data to be sent to the queue
-struct sensors_data dataS;
+typedef struct sensors_data {
+    uint16_t co2;
+    uint16_t humidity;
+    int temperature;
+} dataShared;
 
 
-
-/*-----------------------------------------------------------*/
-
-void createMutex(){
-
-    //printf("initializing mutex \n");
-    mutex = xSemaphoreCreateMutex();
-    if (mutex == NULL) {
-        // Mutex creation failed
-        printf("mutex is null");
-
-        // Handle the error
+dataShared_t dataShared_create(uint16_t co2, uint16_t humidity, int temperature){
+    dataShared_t _newDataShared= calloc(sizeof(dataShared),1);
+    if(NULL==_newDataShared){
+        return NULL;
     }
+
+    _newDataShared->co2=co2;
+    _newDataShared->humidity=humidity;
+    _newDataShared->temperature= temperature;
+    return _newDataShared; 
+    }
+
+void dataShared_destroy(dataShared_t self)
+{
+    if(NULL!=self){
+        free(self);
+    }
+}
+
+void dataShared_setValues(uint16_t co2, uint16_t humidity, int temperature, dataShared_t self){
+ 
+    self->co2= co2;
+    self-> humididty=humidity;
+    self-> temperature= temperature;
+   
+}
+
+uint16_t dataShared_getCo2(dataShared_t self){
+
+    return self->co2;
+}
+
+uint16_t dataShared_getTemperature(dataShared_t self){
+
+    return self->temperature;
+}
+int dataShared_getHumidity(dataShared_t self){
+
+    return self->humidity;
 }
 
 
 
-// Prepare Packets
-struct sensors_data* setSensorData()
-{ 
-
-    struct sensors_data* pData = &dataS;
-    if (xSemaphoreTake(mutex, portMAX_DELAY) == pdTRUE) {
-	// Create new struct copy of data and put the data from sensors into it
-	
-	pData->co2 = getCoTwo();
-	pData->humidity = getHumidity();
-	pData->temperature = getTemperature();
-    xSemaphoreGive(mutex);
-    }
-    return pData;
-}
+   
 
 
- struct sensors_data* getSensorData(){
 
-    struct sensors_data* pData= &dataS;
-    if (xSemaphoreTake(mutex, portMAX_DELAY) == pdTRUE) {
-        
-        xSemaphoreGive(mutex);
-    }  
-    return pData;
-} 
+
 
 

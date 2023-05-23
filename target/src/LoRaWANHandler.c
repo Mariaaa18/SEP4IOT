@@ -31,8 +31,8 @@ extern QueueHandle_t xQueue2;
 
 extern MessageBufferHandle_t downLinkMessageBufferHandle;
 extern QueueHandle_t xQueue_DownLink;
-
-struct sensors_data* data;
+struct dataShared_t dataDown;
+struct dataShared_t data;
 //struct sensors_data downData;
 //struct sensors_data* downDataP;
 
@@ -196,9 +196,9 @@ void lora_handler_task(void *pvParameters)
 		
 
 		// Some dummy payload
-		uint16_t hum = data->humidity;	 // Dummy humidity
-		int16_t temp = data->temperature; // Dummy temp
-		uint16_t co2_ppm = data->co2;	 // Dummy CO2
+		uint16_t hum =dataShared_getCo2(data) ;	 // Dummy humidity
+		int16_t temp = dataShared_getTemperature(data); // Dummy temp
+		uint16_t co2_ppm = dataShared_getCo2(data);	 // Dummy CO2
 
 		_uplink_payload.bytes[0] = hum >> 8;
 		_uplink_payload.bytes[1] = hum & 0xFF;
@@ -247,15 +247,15 @@ void lora_handler_task(void *pvParameters)
 
 			
 				
-			data->co2 = maxCo2Setting;
-			data->humidity = maxHumSetting;
-			data->temperature = maxTempSetting;
+		
 
 		
+			destroy(dataDown);
+			dataDown = dataShared_create(maxCo2Setting, maxHumSetting,maxTempSetting );
 
 			 //this if when we have the reciever controller
 
-			if(xQueueSend(xQueue_DownLink, (void *)&data, portMAX_DELAY) !=pdPASS){
+			if(xQueueSend(xQueue_DownLink, (void *)&dataDown, portMAX_DELAY) !=pdPASS){
 				printf("Failed to send item");
 			}
 
