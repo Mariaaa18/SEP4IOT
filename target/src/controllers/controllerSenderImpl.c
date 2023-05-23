@@ -43,7 +43,7 @@ void runSetData()
 	printf("before the event group------\n");
 	xEventGroupWaitBits(
 		_myEventGroupSender,
-		BIT_0 | BIT_2,
+		BIT_0 | BIT_1 | BIT_2,
 		pdTRUE,
 		pdTRUE,
 		portMAX_DELAY);
