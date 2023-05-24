@@ -40,7 +40,7 @@ void setSensorData()
 void runSetData()
 {
 	
-	printf("before the event group------\n");
+	//printf("before the event group------\n");
 	xEventGroupWaitBits(
 		_myEventGroupSender,
 		BIT_0 | BIT_1 | BIT_2,
@@ -50,11 +50,12 @@ void runSetData()
 	vTaskDelay(40);
 	
 	//printf("Environment start to set the data\n");
-	printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
+	//printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
 	dataC = setSensorData(); //this is form the mutex;
-	printf("C. Humidity: %d \n", dataC->humidity);
+	printf("-->event group triggered \n");
+	/* printf("C. Humidity: %d \n", dataC->humidity);
 	printf("C. CO2: %d \n", dataC->co2);
-	printf("C. Temperature: %d \n", dataC->temperature);
+	printf("C. Temperature: %d \n", dataC->temperature); */
 
 	vTaskDelay(75);
 	if (xQueueSendToBack(xQueue2, (void *)&dataC, 1) != pdPASS)

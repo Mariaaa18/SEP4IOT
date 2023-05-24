@@ -84,7 +84,7 @@ void actOnHumidity(){
     //Act
       if(humOpt+50 > curHum){
         //call on actuatorT class here
-      //  printf("AA.hum too low min: %d and current: %d\n-- increse hum by:%d \n",humOpt+50,curHum, (humOpt+50)-curHum);
+       printf("AA.hum too low min: %d and current: %d\n-- increse hum by:%d \n",humOpt+50,curHum, (humOpt+50)-curHum);
        
     }else if( humOpt-50 < curHum){
         //Call if colder
@@ -96,17 +96,20 @@ void actOnHumidity(){
 
 void actOnCo2(){
     //Act
-  /*   display_7seg_powerUp();
-      if(co2Opt > curCo2){
-        display_7seg_displayHex("C021");
+    
+    if(co2Opt > curCo2){
+        
         //call on actuatorT class here
-       // printf("AA.temp too low min: %d and current: %d\n-- close window-- \n",co2Opt+200,curCo2 );
-       
-    }else if( co2Opt < curCo2){
+       printf("AA.co2 too low min: %d and current: %d\n",co2Opt,curCo2 );
+    
+    } else if( co2Opt < curCo2){
         //Call if colder
-      //  printf("AA. temp too high max: %d and current: %d\n-- open the window--\n",co2Opt-200 ,curCo2);
-      display_7seg_displayHex("C022");
-    }  */
+       printf("AA.co2 too high max: %d and current: %d\n",co2Opt,curCo2);
+      //display_7seg_displayHex("C022");
+    }   
+   //display_7seg_displayHex("C022");
+   
+  
    
     
     
@@ -143,11 +146,11 @@ void setRetriever( void *p){
             // Clear the event bit
           
             // Process the event
-         //  setCurrentValue();
+           setCurrentValue();
            vTaskDelay(100);
            actOnTemperature();
-          // vTaskDelay(100);
-          // actOnHumidity();
+          vTaskDelay(100);
+           actOnHumidity();
            vTaskDelay(100);
            actOnCo2();
             
@@ -163,5 +166,5 @@ void controllerReceiveTask(){
 		setRetriever, "setRetriever", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 
     initServo();
-    //display_7seg_powerUp();
+   
 }
