@@ -7,7 +7,6 @@
 #include <event_groups.h>
 #include "../../drivers/include/controllerReceiver.h"
 #include "../../drivers/include/dataShared.h"
-#include "FreeRTOSVariant.h"
 #include "../../drivers/include/temperature.h"
 #include "../../drivers/include/actuator.h"
 

@@ -26,12 +26,16 @@ add_executable(
   include/FreeRTOS_defs/ATMEGA_FreeRTOS.h
   src/test_co2_sensor.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/models/cotwo.c
+  src/test_queue_ControllerSender_LoRaWAN.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/controllers/controllerSenderImpl.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/controllers/controllerReceiverImpl.c
 )
 
 include_directories(include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../target/drivers/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/FreeRTOS_defs)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/fff)
+
 
 
 add_subdirectory(src)

@@ -1,7 +1,6 @@
 
 #include <stdio.h>
-// #include <avr/io.h>
-
+//#include <avr/io.h>
 #include <ATMEGA_FreeRTOS.h>
 #include <task.h>
 #include <queue.h>
@@ -57,7 +56,7 @@ void runSetData()
 	printf("C. Temperature: %d \n", dataC->temperature);
 
 	vTaskDelay(75);
-	if (xQueueSendToBack(xQueue2, (void *)&dataC, 1) != pdPASS)
+	if (  xQueueSendToBack(xQueue2, (void *)&dataC, 1) != pdPASS)
 	{
 		//printf("queue is full");
 		//(queue is full), ignore and lose the packet.
