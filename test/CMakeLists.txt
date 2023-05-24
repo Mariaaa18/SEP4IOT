@@ -23,12 +23,16 @@ include(GoogleTest)
 add_executable(
   ${PROJECT_NAME}
   ""
+  include/FreeRTOS_defs/ATMEGA_FreeRTOS.h
+  src/test_co2_sensor.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/models/cotwo.c
 )
 
 include_directories(include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../target/drivers/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/FreeRTOS_defs)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/fff)
+
 
 add_subdirectory(src)
 
