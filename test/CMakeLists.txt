@@ -26,6 +26,9 @@ add_executable(
 )
 
 include_directories(include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../target/drivers/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/FreeRTOS_defs)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/fff)
 
 add_subdirectory(src)
 
