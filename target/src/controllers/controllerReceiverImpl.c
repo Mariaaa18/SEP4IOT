@@ -2,6 +2,7 @@
 // #include <avr/io.h>
 
 #include <ATMEGA_FreeRTOS.h>
+#include <display_7seg.h>
 #include <task.h>
 #include <queue.h>
 #include <event_groups.h>
@@ -41,9 +42,9 @@ int curCo2 = 0;
 void retrieveQueueData()
 {
     xQueueReceive(xQueue_DownLink, &dataRecievd, portMAX_DELAY);
-    printf("data recieved temp:%d\n",dataRecievd.temp);
+    //printf("data recieved temp:%d\n",dataRecievd.temp);
     currentValue= getSensorData();
-    printf("dat from datasherd%d:\n", currentValue->temperature);
+    // printf("dat from datasherd%d:\n", currentValue->temperature);
 }   
 
 void setCurrentValue(){
@@ -66,45 +67,56 @@ void actOnTemperature(){
     //Act
     if(tempOpt+50 > curTemp){
         //call on actuatorT class here
-        printf("AA.temp too hih max: %d and current: %d\n",tempOpt+50,curTemp);
-        setServoHigh();
+        printf("AA.temp too low min: %d and current: %d\n-- increse temp by:%d \n",tempOpt+50,curTemp, (tempOpt+50)-curTemp);
+        setServoLow();
+        
     }else if( tempOpt-50 < curTemp){
         //Call if colder
-        printf("AA. temp too low max: %d and current: %d\n",tempOpt-50,curTemp);
-        setServoLow();
+        printf("AA. temp too high max: %d and current: %d\n-- decrease temp by:%d\n",tempOpt-50,curTemp,curTemp-(tempOpt-50));
+      
+        setServoHigh();
+       
     } 
 
-    
-   
-   
 }
 
 void actOnHumidity(){
     //Act
-   
+      if(humOpt+50 > curHum){
+        //call on actuatorT class here
+      //  printf("AA.hum too low min: %d and current: %d\n-- increse hum by:%d \n",humOpt+50,curHum, (humOpt+50)-curHum);
+       
+    }else if( humOpt-50 < curHum){
+        //Call if colder
+        printf("AA. hum too high max: %d and current: %d\n-- decrease hum by:%d\n",humOpt-50,curHum,curHum-(humOpt-50));
+      
+       
+    } 
 }
 
 void actOnCo2(){
     //Act
-  
-}
-
-void runRetriever(){
+  /*   display_7seg_powerUp();
+      if(co2Opt > curCo2){
+        display_7seg_displayHex("C021");
+        //call on actuatorT class here
+       // printf("AA.temp too low min: %d and current: %d\n-- close window-- \n",co2Opt+200,curCo2 );
+       
+    }else if( co2Opt < curCo2){
+        //Call if colder
+      //  printf("AA. temp too high max: %d and current: %d\n-- open the window--\n",co2Opt-200 ,curCo2);
+      display_7seg_displayHex("C022");
+    }  */
    
-   
-    retrieveQueueData();
-    //setCurrentValue();
-    actOnTemperature();
-    vTaskDelay(100);
-    actOnHumidity();
-    vTaskDelay(100);
-    actOnCo2();
+    
     
 }
 
+
+
 void setRetriever( void *p){
     (void)p;
-	for (;;)
+	while(1)
 	{
 		//printf("RetrieveData---\n");
          // Check if a message is available in the queue
@@ -131,11 +143,11 @@ void setRetriever( void *p){
             // Clear the event bit
           
             // Process the event
-            setCurrentValue();
-            vTaskDelay(100);
-           actOnTemperature();
+         //  setCurrentValue();
            vTaskDelay(100);
-            actOnHumidity();
+           actOnTemperature();
+          // vTaskDelay(100);
+          // actOnHumidity();
            vTaskDelay(100);
            actOnCo2();
             
@@ -151,4 +163,5 @@ void controllerReceiveTask(){
 		setRetriever, "setRetriever", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 
     initServo();
+    //display_7seg_powerUp();
 }
