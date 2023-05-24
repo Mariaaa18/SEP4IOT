@@ -147,14 +147,7 @@ void lora_handler_task(void *pvParameters)
 
 	_lora_setup();
 
-	dataToSend.co2 = 999;
-			dataToSend.hum = 111;
-			dataToSend.temp = 111;
 
-	//test queue
-	if(xQueueSend(xQueue_DownLink, (void *)&dataToSend, portMAX_DELAY) !=pdPASS){
-				printf("Failed to send item....\n");
-			}
 
 	_uplink_payload.len = 6;
 	_uplink_payload.portNo = 2;

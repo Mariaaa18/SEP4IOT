@@ -52,7 +52,7 @@ void setCurrentValue(){
 
     currentValue= getSensorData();
     curTemp = currentValue->temperature;
-    curHum = currentValue->humidity;
+    curHum = currentValue->humidity*10;
     curCo2 = currentValue->co2;
     //printf("temp in reciever :%d",currentValue->temperature);
 }
