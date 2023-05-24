@@ -17,6 +17,7 @@
 #include <message_buffer.h>
 #include "controllers/dataShared.h"
 #include "models/actuator.h"
+#include "models/mystruct.h"
 // Parameters for OTAA join - You have got these in a mail from IHA
 #define LORA_appEUI "1AB7F2972CC78C9A"
 #define LORA_appKEY "6C7EF7F5BC5266D1FAEE88AF7EA9BABD"
@@ -33,6 +34,7 @@ extern MessageBufferHandle_t downLinkMessageBufferHandle;
 extern QueueHandle_t xQueue_DownLink;
 
 struct sensors_data* data;
+struct MyData dataToSend;
 //struct sensors_data downData;
 //struct sensors_data* downDataP;
 
@@ -145,6 +147,15 @@ void lora_handler_task(void *pvParameters)
 
 	_lora_setup();
 
+	dataToSend.co2 = 999;
+			dataToSend.hum = 111;
+			dataToSend.temp = 111;
+
+	//test queue
+	if(xQueueSend(xQueue_DownLink, (void *)&dataToSend, portMAX_DELAY) !=pdPASS){
+				printf("Failed to send item....\n");
+			}
+
 	_uplink_payload.len = 6;
 	_uplink_payload.portNo = 2;
 
@@ -247,15 +258,15 @@ void lora_handler_task(void *pvParameters)
 
 			
 				
-			data->co2 = maxCo2Setting;
-			data->humidity = maxHumSetting;
-			data->temperature = maxTempSetting;
+			dataToSend.co2 = maxCo2Setting;
+			dataToSend.hum = maxHumSetting;
+			dataToSend.temp = maxTempSetting;
 
 		
 
 			 //this if when we have the reciever controller
 
-			if(xQueueSend(xQueue_DownLink, (void *)&data, portMAX_DELAY) !=pdPASS){
+			if(xQueueSend(xQueue_DownLink, (void *)&dataToSend, portMAX_DELAY) !=pdPASS){
 				printf("Failed to send item");
 			}
 

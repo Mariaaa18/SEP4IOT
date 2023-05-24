@@ -25,6 +25,7 @@
 #include "models/humidity.h"
 #include "models/temperature.h"
 #include "controllers/dataShared.h"
+#include "models/mystruct.h"
 
 // define queue
 EventGroupHandle_t _myEventGroupSender = NULL;
@@ -32,6 +33,7 @@ MessageBufferHandle_t downLinkMessageBufferHandle = NULL;
 QueueHandle_t xQueue_DownLink = NULL;
 
 struct sensors_data dataM;
+
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 
@@ -67,7 +69,7 @@ void create_tasks_and_semaphores(void)
 	controllerReceiveTask();
 	
 
-	xQueue_DownLink = xQueueCreate(1, sizeof(dataM));
+	xQueue_DownLink = xQueueCreate(1, sizeof(struct MyData));
 
 	// xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
 	//_myEventGroupSender = xEventGroupCreate();

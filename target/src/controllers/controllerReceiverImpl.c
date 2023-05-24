@@ -10,6 +10,7 @@
 #include "FreeRTOSVariant.h"
 #include "../models/temperature.h"
 #include "../models/actuator.h"
+#include "../models/mystruct.h"
 
 /*
 #include "../models/cotwo.h"
@@ -19,77 +20,80 @@
 
 // extract queue
 extern QueueHandle_t xQueue_DownLink;
+extern EventGroupHandle_t _myEventGroupSender;
 
 struct sensors_data* currentValue;
-struct sensors_data* optimalValue;
-struct sensors_data* downlinkData;
-static uint16_t max = 0;
-static uint16_t min = 0;
+struct MyData dataRecievd;
+
+int co2Opt = 1000;
+int humOpt = 300;
+int tempOpt = 200;
+
+int curTemp = 0;
+int curHum = 0;
+int curCo2 = 0;
+
+#define BIT_0 (1 << 0)
+#define BIT_1 (1 << 1)
+#define BIT_2 (1 << 2)
+
 
 void retrieveQueueData()
 {
-    xQueueReceive(xQueue_DownLink, &downlinkData, portMAX_DELAY);
-  
-    optimalValue->co2 = downlinkData->co2;
-    optimalValue->temperature = downlinkData->temperature;
-    optimalValue->humidity = downlinkData->humidity;
+    xQueueReceive(xQueue_DownLink, &dataRecievd, portMAX_DELAY);
+    printf("data recieved temp:%d\n",dataRecievd.temp);
+    currentValue= getSensorData();
+    printf("dat from datasherd%d:\n", currentValue->temperature);
 }   
 
 void setCurrentValue(){
+
+
     currentValue= getSensorData();
+    curTemp = currentValue->temperature;
+    curHum = currentValue->humidity;
+    curCo2 = currentValue->co2;
     //printf("temp in reciever :%d",currentValue->temperature);
+}
+
+void setOptimalValues(){
+    co2Opt = dataRecievd.co2;
+    humOpt = dataRecievd.hum;
+    tempOpt = dataRecievd.temp;
 }
 
 void actOnTemperature(){
     //Act
-   
-  max = optimalValue->temperature + 50;
-   min = optimalValue->temperature - 50;
-   
-    if(currentValue->temperature > max){
+    if(tempOpt+50 > curTemp){
         //call on actuatorT class here
-        //printf("AA.temp too hih max: %d and current: %d\n",max,currentValue->temperature);
+        printf("AA.temp too hih max: %d and current: %d\n",tempOpt+50,curTemp);
         setServoHigh();
-    }else if( currentValue->temperature < min){
+    }else if( tempOpt-50 < curTemp){
         //Call if colder
-        //printf("AA. temp too low max: %d and current: %d\n",max,currentValue->temperature);
+        printf("AA. temp too low max: %d and current: %d\n",tempOpt-50,curTemp);
         setServoLow();
     } 
+
+    
    
    
 }
 
 void actOnHumidity(){
     //Act
-    max = optimalValue->humidity + 50;
-    min = optimalValue->humidity - 50;
-    if(currentValue->humidity > max ){
-        printf("humidity is too high\n");
-        //call on actuatorH class here
-    }else if(currentValue->humidity < min){
-        //call if less
-        printf("humidity is too low \n");
-    }
+   
 }
 
 void actOnCo2(){
     //Act
-    max = optimalValue->co2 + 200;
-    min = optimalValue->co2 - 200;
-    if(currentValue->co2 > max ){
-        printf("co 2 is too high \n");
-        //call on actuatorC class here
-    }else if(currentValue->co2 < min){
-        printf("co 2 is too low \n");
-        //call if less
-    }
+  
 }
 
 void runRetriever(){
    
    
     retrieveQueueData();
-    setCurrentValue();
+    //setCurrentValue();
     actOnTemperature();
     vTaskDelay(100);
     actOnHumidity();
@@ -103,8 +107,41 @@ void setRetriever( void *p){
 	for (;;)
 	{
 		//printf("RetrieveData---\n");
-     
-		runRetriever();
+         // Check if a message is available in the queue
+        if (uxQueueMessagesWaiting(xQueue_DownLink) > 0) {
+            
+            xQueueReceive(xQueue_DownLink, &dataRecievd, portMAX_DELAY);
+            setOptimalValues();
+
+
+            
+            // Process the message
+          }
+        
+        // Check if the event bit is set in the event group
+        if (xEventGroupWaitBits(
+            _myEventGroupSender,
+            BIT_0 | BIT_1 | BIT_2,
+            pdTRUE,
+            pdTRUE,
+            portMAX_DELAY)) {
+                xEventGroupClearBits(_myEventGroupSender,BIT_0);
+                xEventGroupClearBits(_myEventGroupSender,BIT_1);
+                xEventGroupClearBits(_myEventGroupSender,BIT_2);
+            // Clear the event bit
+          
+            // Process the event
+            setCurrentValue();
+            vTaskDelay(100);
+           actOnTemperature();
+           vTaskDelay(100);
+            actOnHumidity();
+           vTaskDelay(100);
+           actOnCo2();
+            
+            
+             
+        }
         
 	}
 }
