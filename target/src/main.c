@@ -19,6 +19,7 @@
 #include <stream_buffer.h>
 #include <message_buffer.h>
 #include "event_groups.h"
+
 #include "controllers/controllerSender.h"
 #include "controllers/controllerReceiver.h"
 #include "models/cotwo.h"
@@ -26,6 +27,7 @@
 #include "models/temperature.h"
 #include "controllers/dataShared.h"
 #include "models/mystruct.h"
+
 
 // define queue
 EventGroupHandle_t _myEventGroupSender = NULL;
