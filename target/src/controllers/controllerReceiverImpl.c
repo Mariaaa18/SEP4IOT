@@ -23,53 +23,45 @@
 // extract queue
 extern QueueHandle_t xQueue_DownLink;
 extern EventGroupHandle_t _myEventGroupSender;
+
 int co2Opt = 1000;
 int humOpt = 300;
 int tempOpt = 200;
 
+int curTemp = 0;
+int curHum = 0;
+int curCo2 = 0;
+
 
 struct sensors_data* downlinkData;
 
-
-void retrieveQueueData()
-{
-    xQueueReceive(xQueue_DownLink, &downlinkData, portMAX_DELAY);
-    tempOpt = downlinkData->temperature;
-    co2Opt = downlinkData -> co2;
-    humOpt = downlinkData -> humidity;
+void getTempFromSensor(){
+    curTemp = getTemperature();
   
-
-} 
-
-void eventGroupTrigger(){
-
-    printf("before the event group------\n");
-	xEventGroupWaitBits(
-		_myEventGroupSender,
-		BIT_0 | BIT_1 | BIT_2,
-		pdTRUE,
-		pdTRUE,
-		portMAX_DELAY);
-	vTaskDelay(40);
-
-    printf("CR: trigger by eg\n");
-    
 }
+void getHumFromSensor(){
+    curHum = getHumidity();
+  
+}
+
+
+
+
 
 
 
 void actOnTemperature(){
     //Act
    
-
+ getTempFromSensor();
    
-    if(tempOpt+50 > getTemperature()){
+    if(tempOpt+50 > curTemp){
         //call on actuatorT class here
-        printf("AA.temp too hih max: %d and current: %d\n",tempOpt,getTemperature());
+        printf("AA.temp too hih max: %d and current: %d\n",tempOpt+50,curTemp);
         setServoHigh();
-    }else if( tempOpt-50 < getTemperature()){
+    }else if( tempOpt-50 < curTemp){
         //Call if colder
-        printf("AA. temp too low max: %d and current: %d\n",tempOpt,getTemperature());
+        printf("AA. temp too low max: %d and current: %d\n",tempOpt-50,curTemp);
         setServoLow();
     } 
    
@@ -78,60 +70,47 @@ void actOnTemperature(){
 
 void actOnHumidity(){
     //Act
-   /*  max = optimalValue->humidity + 50;
-    min = optimalValue->humidity - 50;
-    if(currentValue->humidity > max ){
+   getHumFromSensor();
+    if(humOpt+50 > curHum ){
         printf("humidity is too high\n");
         //call on actuatorH class here
-    }else if(currentValue->humidity < min){
+    }else if(humOpt-50 < curHum ){
         //call if less
         printf("humidity is too low \n");
-    } */
+    } 
 }
 
 void actOnCo2(){
-  /*   //Act
-    max = optimalValue->co2 + 200;
-    min = optimalValue->co2 - 200;
-    if(currentValue->co2 > max ){
+ curCo2 = getCoTwo();
+    if(co2Opt+200 < curCo2){
         printf("co 2 is too high \n");
         //call on actuatorC class here
-    }else if(currentValue->co2 < min){
+    }else if(humOpt-200 > curCo2){
         printf("co 2 is too low \n");
         //call if less
-    } */
+    }
 }
 
-void runRetriever(){
-
-
-
-    eventGroupTrigger();
-    retrieveQueueData();
-    vTaskDelay(100);
-    actOnTemperature();
-    vTaskDelay(100);
-    actOnHumidity();
-    vTaskDelay(100);
-    actOnCo2();
-    
-}
 
 void setRetriever( void *p){
     (void)p;
+   
 	for (;;)
 	{
+       
+        
 		//printf("RetrieveData---\n");
        // Check if a message is available in the queue
         if (uxQueueMessagesWaiting(xQueue_DownLink) > 0) {
             
             xQueueReceive(xQueue_DownLink, &downlinkData, portMAX_DELAY);
+            
             // Process the message
             tempOpt = downlinkData->temperature;
+            printf("CR:Recieved from queue temp:%d",tempOpt);
             co2Opt = downlinkData -> co2;
             humOpt = downlinkData -> humidity;
-            printf("Received message from the queue\n");
-            actOnTemperature();
+           
         }
         
         // Check if the event bit is set in the event group
@@ -147,8 +126,15 @@ void setRetriever( void *p){
             // Clear the event bit
           
             // Process the event
-            actOnTemperature();
-            printf("Event triggered\n");
+           actOnTemperature();
+           vTaskDelay(100);
+
+           actOnHumidity();
+           vTaskDelay(100);
+           actOnCo2();
+            
+            
+             
         }
 	
         
