@@ -74,7 +74,7 @@ void runTaskTemperature()
         printf("Temp: %d\n", temperature);
         xEventGroupSetBits(_myEventGroupSender, BIT_0);
         vTaskDelay(1);
-        printf("heap space remaining: %d \n",xPortGetFreeHeapSize());
+        //printf("heap space remaining: %d \n",xPortGetFreeHeapSize());
 
         // \param[in] servoNo The servo to set the position for (0:J14 (Servo#0) 1:J13 (Servo#1))
         //\param[in] percent The position to set the servo to [-100 .. 100]
