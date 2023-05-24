@@ -6,7 +6,7 @@ rm -f proj_pages/firmware/firmware.zip
 zip proj_pages/firmware/firmware.zip firmware.*
 
 # Update test_result.xml
-cp -f test_result.xml proj_pages/testdata/test_result.xml
+# cp -f test_result.xml proj_pages/testdata/test_result.xml
 
 # Update date stamps
 NOW=$(date)
