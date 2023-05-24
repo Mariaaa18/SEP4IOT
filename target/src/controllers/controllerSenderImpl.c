@@ -64,6 +64,8 @@ void runSetData()
 	}
 }
 
+//JUST FOPR TESTING PURPOSES
+
 // 1st Task to get Data from Sensors and prepare it into a Packet.
 void setData(void *p)
 {
