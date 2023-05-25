@@ -25,9 +25,11 @@ add_executable(
   ""
   include/FreeRTOS_defs/ATMEGA_FreeRTOS.h
   src/test_co2_sensor.cpp
+  src/test_temperature_sensor.cpp
   src/test_event_group_await_bits.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/models/cotwo.c
- # ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/models/humidity.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/models/humidity.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/models/temperature.c
   # ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/controllers/controllerSenderImpl.c
 )
 

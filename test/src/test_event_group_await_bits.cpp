@@ -7,6 +7,7 @@
 extern "C" {
     #include <cotwo.h>
     #include <humidity.h>
+    #include <temperature.h>
     #include <controllerSender.h>
 }
 
@@ -32,19 +33,21 @@ TEST_F(EventGroupAwaitBits_awaitBits_Test, TestBody) {
     //set bits
     EventBits_t expectedBits = BIT_0 | BIT_1 | BIT_2;
 
+    xEventGroupClearBits_fake;
+
     //Act
+    runTemperature();
+    ASSERT_EQ(xEventGroupSetBits_fake.arg1_val, BIT_0);
+
     run_coTow();
-    ASSERT_EQ(xEventGroupSetBits_fake.call_count, BIT_1);
+    ASSERT_EQ(xEventGroupSetBits_fake.arg1_val, BIT_1);
     
-    //runTaskHumidity();
-    ASSERT_EQ(BIT_2, BIT_2);
+    runHumidity();
+    ASSERT_EQ(xEventGroupSetBits_fake.arg1_val, BIT_2);
 
-    //runTemperatureTask();
-    ASSERT_EQ(BIT_0, BIT_0);
-
-
-    EventBits_t returnedBits = xEventGroupWaitBits_fake.return_val;
+    EventBits_t returnedBits = xEventGroupGetBits_fake.return_val;
     //Assert/Expect
-    //EventBits_t returnedBits = xEventGroupWaitBits_Fake.arg0_history[0]; // Get the argument from the fake function call
-    ASSERT_EQ(7, expectedBits); // Check if the returned bit matches the expected value
+    //EventBits_t returnedBits = xEventGroupWaitBits_fake.arg0_history[0]; // Get the argument from the fake function call
+    //EventBits_t returnedBits = xEventGroupGetBits_fake;
+    ASSERT_EQ(returnedBits, expectedBits); // Check if the returned bit matches the expected value
 }

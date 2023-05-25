@@ -4,3 +4,4 @@
 void createHumidity();
 int getHumidity();
 void runTaskHumidity();
+void runHumidity();

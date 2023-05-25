@@ -45,14 +45,8 @@ void createTemperature()
     // Inject Callback Reference(Insisde the runTaskIrl, whenever there is a new measuring, we call the callback and send in args the new reading, which then the callback will replace cotwo with that reading)
 }
 
-void runTaskTemperature()
-{
-   
-    // printf("Inside the temperature measuring task \n");
-
-    for (;;)
-    {
-        //  printf("Inside temp mesaure loop \n");
+void runTemperature(){
+//  printf("Inside temp mesaure loop \n");
         if (HIH8120_OK != hih8120_wakeup())
         {
             // Something went wrong
@@ -90,6 +84,16 @@ void runTaskTemperature()
         //  printf("Temperature bit %d is set and try to send.\n",BIT_0);
         // delay 25sec
         
+}
+
+void runTaskTemperature()
+{
+   
+    // printf("Inside the temperature measuring task \n");
+
+    for (;;)
+    {
+        runTemperature();
     }
 }
 int getTemperature()
