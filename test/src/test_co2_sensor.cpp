@@ -21,7 +21,7 @@ class CoTwoTest : public ::testing::Test
 protected:
     void SetUp() override
     {
-
+        RESET_FAKE(xTaskCreate);
         RESET_FAKE(mh_z19_initialise);
         RESET_FAKE(mh_z19_takeMeassuring);
         RESET_FAKE(xEventGroupCreate);

@@ -7,8 +7,3 @@ extern "C"
 #include <controllerSender.h>
 #include <serial.h>
 }
-
-FAKE_VOID_FUNC(run_coTow)
-FAKE_VOID_FUNC(run_coTow)
-FAKE_VOID_FUNC(run_coTow)
-
