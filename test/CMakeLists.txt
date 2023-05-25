@@ -27,7 +27,7 @@ add_executable(
   src/test_co2_sensor.cpp
   src/test_event_group_await_bits.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/models/cotwo.c
-  /workspaces/SEP4IOT/target/src/controllers/controllerReceiverImpl.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/controllers/controllerReceiverImpl.c
   # ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/controllers/controllerSenderImpl.c
 )
 
