@@ -22,6 +22,7 @@ class EventGroupAwaitBits_awaitBits_Test : public ::testing::Test {
 protected:
     void SetUp() override {
         RESET_FAKE(xEventGroupWaitBits);
+        RESET_FAKE(xEventGroupGetBits);
         //RESET_FAKE(xEventGroupSetBits);
 
         FFF_RESET_HISTORY();
@@ -32,6 +33,7 @@ TEST_F(EventGroupAwaitBits_awaitBits_Test, TestBody) {
     //Arrange
     //set bits
     EventBits_t expectedBits = BIT_0 | BIT_1 | BIT_2;
+    xEventGroupGetBits_fake.return_val = expectedBits;
 
     xEventGroupClearBits_fake;
 
