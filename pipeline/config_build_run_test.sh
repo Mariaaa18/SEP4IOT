@@ -9,5 +9,5 @@ rm -rf build test_result.xml ../test_result.xml
 ./build/iot_base_test --gtest_output="xml:temp.xml"
 sed 's/\/workspaces\/iot-base\///g' < temp.xml > ../test_result.xml
 rm temp.xml
-#ctest --output-junit ../test_result.xml --test-dir build
+ctest --output-junit ../test_result.xml --test-dir build
 exit 0
