@@ -15,7 +15,6 @@ extern EventGroupHandle_t _myEventGroupSender;
 
 void run_coTow()
 {
-
     mh_z19_returnCode_t rc;
 
     //  printf("Run Forrest Run (Inside Loop)\n");
@@ -34,6 +33,7 @@ void run_coTow()
     // delay 25sec
     vTaskDelay(2500);
 }
+
 void coTwo_task(void *p)
 {
     (void)p;
@@ -49,7 +49,7 @@ void createCoTwo()
     mh_z19_initialise(ser_USART3);
     // maybe create the task in main
     xTaskCreate(
-        coTwo_task, "CoTwoTask", configMINIMAL_STACK_SIZE + 200, NULL, 1, NULL);
+        coTwo_task, "CoTwoTask", configMINIMAL_STACK_SIZE , NULL, 3, NULL);
 }
 
 /*

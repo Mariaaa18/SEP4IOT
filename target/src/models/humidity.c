@@ -25,21 +25,16 @@ void createHumidity()
     xTaskCreate(
         runTaskHumidity, "HumidityTask" // A name just for humans
         ,
-        configMINIMAL_STACK_SIZE + 200 // This stack size
+        configMINIMAL_STACK_SIZE // This stack size
         ,
-        NULL, 1 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
+        NULL, 3 // Priority, with 3 (configMAX_PRIORITIES - 1) being the highest, and 0 being the lowest.
         ,
         NULL);
     // Inject Callback Reference(Insisde the runTaskIrl, whenever there is a new measuring, we call the callback and send in args the new reading, which then the callback will replace cotwo with that reading)
 }
 
-// Set arg with callback reference;
-void runTaskHumidity()
-{
-
-    for (;;)
-    {
-        if (HIH8120_OK != hih8120_wakeup())
+void runHumidity(){
+ if (HIH8120_OK != hih8120_wakeup())
         {
             // Something went wrong
             // Investigate the return code further
@@ -55,7 +50,7 @@ void runTaskHumidity()
         vTaskDelay(100); // After the hih8120_measure() call the two wire inteface (TWI) will need minimum 1 ms to fetch the results from the sensor!
 
         humidity = hih8120_getHumidity();
-        printf("Hum: %d", humidity);
+        printf("Hum: %d \n", humidity);
         xEventGroupSetBits(_myEventGroupSender, BIT_2);
         // delay 25sec
         vTaskDelay(2500);
@@ -64,6 +59,15 @@ void runTaskHumidity()
         // point to message
         // xMessage *pxPointerMessage = &myMessage
         // Send it to the queue (xQueueSend(The handle of the queue , The ADDRESS of the variable that holds the message, Delay))
+}
+
+// Set arg with callback reference;
+void runTaskHumidity()
+{
+
+    for (;;)
+    {
+       runHumidity();
     }
 }
 
@@ -79,33 +83,3 @@ int getHumidity()
 {
     return humidity;
 }
-
-// In the other sensor classes:
-/*
-    have a pointer to the xMessage*
-    As for xQueueReceive(Queue handler, pointer to message, delay)
-    Two options: Either add all the sensors values like a train passing by stops, or only send message to Main and somehow handle it inside of Main.
-
-*/
-
-// Event Groups
-/*
-    Declare global
-    #define BIT_TASK_A_READY(1 << 0)
-    #define BIT_TASK_B_READY (1 << 1)
-
-    Define the event group some where in main or in an initialization task
-    _myEventGroup = xEventGroupCreate()
-
-    To set bits in group
-    xEventGroupSetBits(_myEventGroup, BIT_TASK_A_READY);
-
-    Wait for event bits to be set in Group
-    xEventGroupWaitBits(
-        _myEventGroup, //Even group being tested
-        BIT_TASK_B_READY, // Bits to wait for
-        pdTRUE, //Clear bits before return
-        pdTRUE, //Wait for bits to be set
-        portMAX_DELAY //Maximum time to wait
-    )
-*/

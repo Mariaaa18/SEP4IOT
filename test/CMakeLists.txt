@@ -23,9 +23,22 @@ include(GoogleTest)
 add_executable(
   ${PROJECT_NAME}
   ""
+  include/FreeRTOS_defs/ATMEGA_FreeRTOS.h
+  src/test_co2_sensor.cpp
+  src/test_temperature_sensor.cpp
+  src/test_event_group_await_bits.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/models/cotwo.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/models/humidity.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/models/temperature.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/controllers/controllerReceiverImpl.c
+  # ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/controllers/controllerSenderImpl.c
 )
 
 include_directories(include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../target/drivers/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/FreeRTOS_defs)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/fff)
+
 
 add_subdirectory(src)
 
