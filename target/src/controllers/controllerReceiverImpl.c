@@ -39,13 +39,7 @@ int curCo2 = 0;
 #define BIT_2 (1 << 2)
 
 
-void retrieveQueueData()
-{
-    xQueueReceive(xQueue_DownLink, &dataRecievd, portMAX_DELAY);
-    //printf("data recieved temp:%d\n",dataRecievd.temp);
-    currentValue= getSensorData();
-    // printf("dat from datasherd%d:\n", currentValue->temperature);
-}   
+
 
 void setCurrentValue(){
 
@@ -66,12 +60,12 @@ void setOptimalValues(){
 void actOnTemperature(){
     //Act
     if(tempOpt+50 > curTemp){
-        //call on actuatorT class here
+        
         printf("AA.temp too low min: %d and current: %d\n-- increse temp by:%d \n",tempOpt+50,curTemp, (tempOpt+50)-curTemp);
         setServoLow();
         
     }else if( tempOpt-50 < curTemp){
-        //Call if colder
+       
         printf("AA. temp too high max: %d and current: %d\n-- decrease temp by:%d\n",tempOpt-50,curTemp,curTemp-(tempOpt-50));
       
         setServoHigh();
@@ -121,16 +115,11 @@ void setRetriever( void *p){
     (void)p;
 	while(1)
 	{
-		//printf("RetrieveData---\n");
          // Check if a message is available in the queue
         if (uxQueueMessagesWaiting(xQueue_DownLink) > 0) {
             
             xQueueReceive(xQueue_DownLink, &dataRecievd, portMAX_DELAY);
-            setOptimalValues();
-
-
-            
-            // Process the message
+            setOptimalValues();      
           }
         
         // Check if the event bit is set in the event group
@@ -149,13 +138,10 @@ void setRetriever( void *p){
            setCurrentValue();
            vTaskDelay(100);
            actOnTemperature();
-          vTaskDelay(100);
+           vTaskDelay(100);
            actOnHumidity();
            vTaskDelay(100);
            actOnCo2();
-            
-            
-             
         }
         
 	}
