@@ -1,6 +1,7 @@
 #pragma once
 #include <stdint.h>
 
-void createHumidityTask();
+void createHumidity();
 int getHumidity();
-
+void runTaskHumidity();
+void runHumidity();

@@ -15,7 +15,6 @@ extern EventGroupHandle_t _myEventGroupSender;
 
 void run_coTow()
 {
-
     mh_z19_returnCode_t rc;
 
     //  printf("Run Forrest Run (Inside Loop)\n");
