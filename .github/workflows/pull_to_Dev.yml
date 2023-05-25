@@ -39,12 +39,12 @@ jobs:
       - name: Pull dev container
         run: docker pull ${IMAGE_NAME}
 
-     # - name: Run tests
-      #  run: |
-       #   docker run --rm \
-        #    --mount type=bind,src=${{ github.workspace }},dst=/workspaces \
-         #   --mount type=bind,src=$HOME,dst=/root \
-          #  ${IMAGE_NAME} sh -c "cd /workspaces;./pipeline/config_build_run_test.sh"
+      - name: Run tests
+        run: |
+          docker run --rm \
+            --mount type=bind,src=${{ github.workspace }},dst=/workspaces \
+            --mount type=bind,src=$HOME,dst=/root \
+            ${IMAGE_NAME} sh -c "cd /workspaces;./pipeline/config_build_run_test.sh"
             
       - name: Build target firmware
         run: |
