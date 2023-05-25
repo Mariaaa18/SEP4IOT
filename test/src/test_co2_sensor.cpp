@@ -1,4 +1,13 @@
-/*
+#include "gtest/gtest.h"
+#include "fff/fff.h"
+#include "FreeRTOS_defs/FreeRTOS_FFF_MocksDeclaration.h"
+
+extern "C"
+{
+#include <cotwo.h>
+#include <mh_z19.h>
+#include <serial.h>
+}
 
 FAKE_VOID_FUNC(mh_z19_initialise, serial_comPort_t);
 FAKE_VALUE_FUNC(mh_z19_returnCode_t, mh_z19_takeMeassuring);
@@ -12,7 +21,7 @@ class CoTwoTest : public ::testing::Test
 protected:
     void SetUp() override
     {
-
+        RESET_FAKE(xTaskCreate);
         RESET_FAKE(mh_z19_initialise);
         RESET_FAKE(mh_z19_takeMeassuring);
         RESET_FAKE(xEventGroupCreate);
@@ -55,4 +64,3 @@ TEST_F(CoTwoTest, RunCoTwo_success_full_measurement)
 
     ASSERT_EQ(getCoTwo(), 1000);
 }
-*/

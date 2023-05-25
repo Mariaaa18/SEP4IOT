@@ -34,6 +34,7 @@ void run_coTow()
     // delay 25sec
     vTaskDelay(2500);
 }
+
 void coTwo_task(void *p)
 {
     (void)p;
