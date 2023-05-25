@@ -33,13 +33,8 @@ void createHumidity()
     // Inject Callback Reference(Insisde the runTaskIrl, whenever there is a new measuring, we call the callback and send in args the new reading, which then the callback will replace cotwo with that reading)
 }
 
-// Set arg with callback reference;
-void runTaskHumidity()
-{
-
-    for (;;)
-    {
-        if (HIH8120_OK != hih8120_wakeup())
+void runHumidity(){
+ if (HIH8120_OK != hih8120_wakeup())
         {
             // Something went wrong
             // Investigate the return code further
@@ -64,6 +59,15 @@ void runTaskHumidity()
         // point to message
         // xMessage *pxPointerMessage = &myMessage
         // Send it to the queue (xQueueSend(The handle of the queue , The ADDRESS of the variable that holds the message, Delay))
+}
+
+// Set arg with callback reference;
+void runTaskHumidity()
+{
+
+    for (;;)
+    {
+       runHumidity();
     }
 }
 

@@ -46,14 +46,8 @@ void createTemperature()
     // Inject Callback Reference(Insisde the runTaskIrl, whenever there is a new measuring, we call the callback and send in args the new reading, which then the callback will replace cotwo with that reading)
 }
 
-void runTaskTemperature()
-{
-   
-    // printf("Inside the temperature measuring task \n");
-
-    for (;;)
-    {
-        //  printf("Inside temp mesaure loop \n");
+void runTemperature(){
+//  printf("Inside temp mesaure loop \n");
         if (HIH8120_OK != hih8120_wakeup())
         {
             // Something went wrong
@@ -75,7 +69,7 @@ void runTaskTemperature()
         printf("Temp: %d\n", temperature);
         xEventGroupSetBits(_myEventGroupSender, BIT_0);
         vTaskDelay(1);
-        printf("heap space remaining: %d \n",xPortGetFreeHeapSize());
+        //printf("heap space remaining: %d \n",xPortGetFreeHeapSize());
 
         // \param[in] servoNo The servo to set the position for (0:J14 (Servo#0) 1:J13 (Servo#1))
         //\param[in] percent The position to set the servo to [-100 .. 100]
@@ -91,6 +85,16 @@ void runTaskTemperature()
         //  printf("Temperature bit %d is set and try to send.\n",BIT_0);
         // delay 25sec
         
+}
+
+void runTaskTemperature()
+{
+   
+    // printf("Inside the temperature measuring task \n");
+
+    for (;;)
+    {
+        runTemperature();
     }
 }
 int getTemperature()
