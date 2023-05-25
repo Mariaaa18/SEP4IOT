@@ -30,6 +30,7 @@ add_executable(
   ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/models/cotwo.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/models/humidity.c
   ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/models/temperature.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/controllers/controllerReceiverImpl.c
   # ${CMAKE_CURRENT_SOURCE_DIR}/../target/src/controllers/controllerSenderImpl.c
 )
 
