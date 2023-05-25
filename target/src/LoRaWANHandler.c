@@ -17,6 +17,7 @@
 #include <message_buffer.h>
 #include "../drivers/include/dataShared.h"
 #include "../drivers/include/actuator.h"
+#include "../drivers/include/mystruct.h"
 // Parameters for OTAA join - You have got these in a mail from IHA
 #define LORA_appEUI "1AB7F2972CC78C9A"
 #define LORA_appKEY "6C7EF7F5BC5266D1FAEE88AF7EA9BABD"
@@ -33,6 +34,7 @@ extern MessageBufferHandle_t downLinkMessageBufferHandle;
 extern QueueHandle_t xQueue_DownLink;
 
 struct sensors_data* data;
+struct MyData dataToSend;
 //struct sensors_data downData;
 //struct sensors_data* downDataP;
 
@@ -145,6 +147,8 @@ void lora_handler_task(void *pvParameters)
 
 	_lora_setup();
 
+
+
 	_uplink_payload.len = 6;
 	_uplink_payload.portNo = 2;
 
@@ -162,7 +166,7 @@ void lora_handler_task(void *pvParameters)
 			printf("messgage buffer is null");
 		}
 
-	printf("I am in LoraWAN ---before-- for Loop----\n");
+	
 	// testing servo
 
 	vTaskDelay(100);
@@ -177,7 +181,7 @@ void lora_handler_task(void *pvParameters)
 
 		printf("I am in LoraWAN before waiting time----\n");
 		xTaskDelayUntil(&xLastWakeTime, xFrequency);
-		printf("------I am in LoraWAN before queue----\n");
+		//printf("------I am in LoraWAN before queue----\n");
 		xQueueReceive(xQueue2, &data, portMAX_DELAY);
 		printf("------I am in LoraWAN after queue----\n");
 
@@ -247,22 +251,22 @@ void lora_handler_task(void *pvParameters)
 
 			
 				
-			data->co2 = maxCo2Setting;
-			data->humidity = maxHumSetting;
-			data->temperature = maxTempSetting;
+			dataToSend.co2 = maxCo2Setting;
+			dataToSend.hum = maxHumSetting;
+			dataToSend.temp = maxTempSetting;
 
 		
 
 			 //this if when we have the reciever controller
 
-			if(xQueueSend(xQueue_DownLink, (void *)&data, portMAX_DELAY) !=pdPASS){
+			if(xQueueSend(xQueue_DownLink, (void *)&dataToSend, portMAX_DELAY) !=pdPASS){
 				printf("Failed to send item");
 			}
 
 		
 
             }
-			printf("recieved message hum: %d temp(from struct): %d  co2: %d \n",maxHumSetting,data->temperature,maxCo2Setting);
+			printf("recieved message hum: %d temp(from struct): %d  co2: %d \n",maxHumSetting,maxTempSetting,maxCo2Setting);
 
 			//this probaly needs some refactoring
 

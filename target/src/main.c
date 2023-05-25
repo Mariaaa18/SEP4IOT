@@ -25,6 +25,7 @@
 #include "../drivers/include/humidity.h"
 #include "../drivers/include/temperature.h"
 #include "../drivers/include/dataShared.h"
+#include "../drivers/include/mystruct.h"
 
 // define queue
 EventGroupHandle_t _myEventGroupSender = NULL;
@@ -32,6 +33,7 @@ MessageBufferHandle_t downLinkMessageBufferHandle = NULL;
 QueueHandle_t xQueue_DownLink = NULL;
 
 struct sensors_data dataM;
+
 // Prototype for LoRaWAN handler
 void lora_handler_initialise(UBaseType_t lora_handler_task_priority);
 
@@ -48,18 +50,6 @@ void create_tasks_and_semaphores(void)
 		printf("Failed to create mutex\n");
 	}
 
-   
-    
-	
-	//
-	//createMutex();
-
-	
-
-
-
-	// Set xMessage. In our example this Message could be a int to say the task if it can run or not.
-	// Create tasks
 	createCoTwo();
 	createHumidity();
 	createTemperature();
@@ -67,10 +57,9 @@ void create_tasks_and_semaphores(void)
 	controllerReceiveTask();
 	
 
-	xQueue_DownLink = xQueueCreate(1, sizeof(dataM));
+	xQueue_DownLink = xQueueCreate(1, sizeof(struct MyData));
 
-	// xQueueCreate( Number of items a queue can hold , Size of each item , vTaskStartScheduler() )
-	//_myEventGroupSender = xEventGroupCreate();
+
 }
 
 /*-----------------------------------------------------------*/
@@ -94,7 +83,7 @@ void initialiseSystem()
 	// Here I make room for two downlink messages in the message buffer
 	
 	downLinkMessageBufferHandle = xMessageBufferCreate(sizeof(lora_driver_payload_t)*2); // Here I make room for two downlink messages in the message buffer
-  lora_driver_initialise(1, downLinkMessageBufferHandle);  // The parameter is the USART port the RN2483 module is connected to - in this case USART1 - here no message buffer for down-link messages are defined
+    lora_driver_initialise(1, downLinkMessageBufferHandle);  // The parameter is the USART port the RN2483 module is connected to - in this case USART1 - here no message buffer for down-link messages are defined
 	
 	lora_handler_initialise(3);
 	// humidity inizialiser
@@ -109,15 +98,12 @@ void initialiseSystem()
 /*-----------------------------------------------------------*/
 int main(void)
 {
-	printf("In main before Initialize!!\n");
-	initialiseSystem(); // Must be done as the very first thing!!
+	initialiseSystem();
 	printf("Program Started!!\n");
-
-	
-	vTaskStartScheduler(); // Initialise and run the freeRTOS scheduler. Execution should never return from here.
+    vTaskStartScheduler(); // Initialise and run the freeRTOS scheduler. Execution should never return from here.
 	
     
-	/* Replace with your application code */
+	
 	while (1)
 	{
 		

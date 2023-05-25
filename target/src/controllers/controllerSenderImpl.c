@@ -27,20 +27,12 @@ extern EventGroupHandle_t _myEventGroupSender;
 
 /*-----------------------------------------------------------*/
 
-/* Prepare Packets
-void setSensorData()
-{
-	// Create new struct copy of data and put the data from sensors into it
-	struct sensors_data *pData = &dataC;
-	pData->co2 = getCoTwo();
-	pData->humidity = getHumidity();
-	pData->temperature = getTemperature();
-}*/
+
 
 void runSetData()
 {
 	
-	printf("before the event group------\n");
+	//printf("before the event group------\n");
 	xEventGroupWaitBits(
 		_myEventGroupSender,
 		BIT_0 | BIT_1 | BIT_2,
@@ -49,18 +41,15 @@ void runSetData()
 		portMAX_DELAY);
 	vTaskDelay(40);
 	
-	//printf("Environment start to set the data\n");
-	printf("bit 0 is :%d || bit 1 is:%d || bit 2 is:%d ||, \n", BIT_0, BIT_1, BIT_2);
 	dataC = setSensorData(); //this is form the mutex;
-	printf("C. Humidity: %d \n", dataC->humidity);
-	printf("C. CO2: %d \n", dataC->co2);
-	printf("C. Temperature: %d \n", dataC->temperature);
+	printf("-->event group triggered \n");
+	
+	
 
 	vTaskDelay(75);
 	if (xQueueSendToBack(xQueue2, (void *)&dataC, 1) != pdPASS)
 	{
 		//printf("queue is full");
-		//(queue is full), ignore and lose the packet.
 	}
 }
 

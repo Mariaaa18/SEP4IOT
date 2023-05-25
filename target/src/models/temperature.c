@@ -3,6 +3,7 @@
 
 #include <ATMEGA_FreeRTOS.h>
 #include "event_groups.h"
+#include "../../drivers/include/dataShared.h"
 
 #include <queue.h>
 #include <lora_driver.h>
