@@ -1,7 +1,7 @@
 // test_event_group_await_bits.cpp
 #include <gtest/gtest.h>
-#include <fff.h>
-#include <event_groups.h>
+#include <fff/fff.h>
+#include <FreeRTOS_defs/event_groups.h>
 #include "FreeRTOS_defs/FreeRTOS_FFF_MocksDeclaration.h"
 
 extern "C" {

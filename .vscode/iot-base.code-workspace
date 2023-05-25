@@ -23,7 +23,9 @@
 			"status_leds.h": "c",
 			"semphr.h": "c",
 			"temperature.h": "c",
-			"controllersender.h": "c"
+			"controllersender.h": "c",
+			"datashared.h": "c",
+			"atmega_freertos.h": "c"
 		}
 	}
 
